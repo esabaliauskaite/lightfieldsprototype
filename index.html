@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prototype</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/three.js/build/three.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <script src="js/OrbitControls.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      import { EffectComposer } from "./js/three.js/examples/jsm/postprocessing/EffectComposer.js";
+      import { RenderPass } from "./js/three.js/examples/jsm/postprocessing/RenderPass.js";
+      import { BokehPass } from "./js/three.js/examples/jsm/postprocessing/BokehPass.js";
+      var scene = new THREE.Scene();
+
+      var camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 2;
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setClearColor("#e5e5e5");
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.physicallyCorrectLights = true;
+
+      document.body.appendChild(renderer.domElement);
+
+      const renderPass = new RenderPass(scene, camera);
+
+      const bokehPass = new BokehPass(scene, camera, {
+        focus: 1.0,
+        aperture: 0.025,
+        maxblur: 0.01,
+
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      const composer = new EffectComposer(renderer);
+
+      composer.addPass(renderPass);
+      composer.addPass(bokehPass);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.mouseButtons = {
+        LEFT: THREE.MOUSE.ROTATE,
+        MIDDLE: THREE.MOUSE.DOLLY,
+        RIGHT: THREE.MOUSE.PAN,
+      };
+
+      window.addEventListener("resize", () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      });
+
+      renderer.render(scene, camera);
+
+      var geo = new THREE.PlaneBufferGeometry(2, 2, 4, 4);
+      var img = new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("css/texture.jpg"),
+      });
+      img.side = THREE.DoubleSide;
+      var plane = new THREE.Mesh(geo, img);
+
+      scene.add(plane);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(10, 0, 25);
+      scene.add(directionalLight);
+
+      const effectController = {
+        focus: 500.0,
+        aperture: 5,
+      };
+
+      const matChanger = function () {
+        bokehPass.uniforms["focus"].value = effectController.focus;
+        bokehPass.uniforms["aperture"].value =
+          effectController.aperture * 0.00001;
+      };
+
+      const gui = new dat.GUI({ width: 300 });
+      const message = {
+        left: "Left mouse button to rotate",
+        middle: "Middle mouse button to dolly",
+        right: "Right mouse button to pan",
+      };
+      const InstructionsFolder = gui.addFolder("Instructions");
+      InstructionsFolder.add(message, "left");
+      InstructionsFolder.add(message, "middle");
+      InstructionsFolder.add(message, "right");
+      InstructionsFolder.open();
+
+      const FocusFolder = gui.addFolder("Focus");
+      FocusFolder.add(effectController, "focus", 10.0, 300.0, 10).onChange(
+        matChanger
+      );
+      FocusFolder.open();
+
+      const ApetureFolder = gui.addFolder("Apeture");
+      ApetureFolder.add(effectController, "aperture", 0, 10, 0.1).onChange(
+        matChanger
+      );
+      ApetureFolder.open();
+
+      const SizeFolder = gui.addFolder("Size");
+      SizeFolder.add(plane.scale, "x", 1, 5)
+        .name("Scale X")
+        .onChange(camera.updateProjectionMatrix());
+      SizeFolder.add(plane.scale, "y", 1, 5)
+        .name("Scale Y")
+        .onChange(camera.updateProjectionMatrix());
+      SizeFolder.open();
+
+      const cameraFolder = gui.addFolder("Camera");
+      cameraFolder.add(camera.position, "x", 0, 10);
+      cameraFolder.add(camera.position, "y", 0, 10);
+      cameraFolder.add(camera.position, "z", 0, 10);
+      cameraFolder.open();
+      matChanger();
+
+      var render = function () {
+        requestAnimationFrame(render);
+        composer.render(0.1);
+      };
+
+      render();
+    </script>
+  </body>
+</html>
