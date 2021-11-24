@@ -16,13 +16,38 @@
       import { RenderPass } from "./js/three.js/examples/jsm/postprocessing/RenderPass.js";
       import { BokehPass } from "./js/three.js/examples/jsm/postprocessing/BokehPass.js";
       var scene = new THREE.Scene();
+      let camera;
+      const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+      const AMOUNT = 2;
+      const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
+      const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
+      const cameras = [];
 
-      var camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
+      for (let y = 0; y < AMOUNT; y++) {
+        for (let x = 0; x < AMOUNT; x++) {
+          const subcamera = new THREE.PerspectiveCamera(
+            10,
+            ASPECT_RATIO,
+            0.1,
+            10
+          );
+          subcamera.viewport = new THREE.Vector4(
+            Math.floor(x * WIDTH),
+            Math.floor(y * HEIGHT),
+            Math.ceil(WIDTH),
+            Math.ceil(HEIGHT)
+          );
+          subcamera.position.x = x / AMOUNT - 0.5;
+          subcamera.position.y = 0.5 - y / AMOUNT;
+          subcamera.position.z = 1.5;
+          subcamera.position.multiplyScalar(2);
+          subcamera.lookAt(0, 0, 0);
+          subcamera.updateMatrixWorld();
+          cameras.push(subcamera);
+        }
+      }
+
+      camera = new THREE.ArrayCamera(cameras);
       camera.position.z = 2;
 
       var renderer = new THREE.WebGLRenderer({ antialias: true });
