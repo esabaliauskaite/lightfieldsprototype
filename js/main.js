@@ -22,6 +22,14 @@ var camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 2;
 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.mouseButtons = {
+  LEFT: THREE.MOUSE.ROTATE,
+  MIDDLE: THREE.MOUSE.DOLLY,
+  RIGHT: THREE.MOUSE.PAN,
+};
+
+
 document.body.appendChild(renderer.domElement);
 
 const renderPass = new RenderPass(scene, camera);
