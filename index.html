@@ -5,7 +5,142 @@
     <title>Airborne light field renderer</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
+
   <body>
-    <script src="dist/bundle.js" type="text/javascript"></script>
+    <div id="canvas">
+      <div id="Controls" onclick="onClick()">Open Controls</div>
+      <div id="GUI">
+        <div>
+          <h4>Views</h4>
+          <div class="navel"><a>Single image</a></div>
+          <div class="navel"><a>Multiple image</a></div>
+          <div class="navel"><a>3D cloud</a></div>
+        </div>
+        <div>
+          <h4>Instructions</h4>
+          <p>Left mouse button to rotate</p>
+          <p>Middle mouse button to dolly</p>
+          <p>Right mouse button to pan</p>
+        </div>
+        <span>
+          <h4>Focus</h4>
+          <div class="slider">
+            <input
+              id="FocusInput"
+              type="range"
+              min="10"
+              max="300"
+              oninput="Focusamount.value=FocusInput.value"
+            />
+            <input
+              id="Focusamount"
+              type="number"
+              min="0"
+              max="300"
+              oninput="FocusInput.value=Focusamount.value"
+            />
+          </div>
+        </span>
+        <div>
+          <h4>Apeture</h4>
+          <div class="slider">
+            <input
+              id="ApetureInput"
+              type="range"
+              min="0"
+              max="10"
+              step="0.1"
+              oninput="Apetureamount.value=ApetureInput.value"
+            />
+            <input
+              id="Apetureamount"
+              type="number"
+              min="0"
+              max="10"
+              oninput="ApetureInput.value=Apetureamount.value"
+            />
+          </div>
+        </div>
+
+        <div>
+          <h4>Field of view</h4>
+          <div class="slider">
+            <input id="FOVAmount" type="number" min="10" max="100" />
+          </div>
+        </div>
+
+        <div>
+          <h4>Camera</h4>
+          <div class="slider">
+            <p class="sliderDetails">X</p>
+            <input
+              id="CameraXInput"
+              type="range"
+              min="0"
+              max="10"
+              step="0.1"
+              oninput="CameraXamount.value=CameraXInput.value"
+            />
+            <input
+              id="CameraXamount"
+              type="number"
+              min="0"
+              max="10"
+              oninput="CameraXInput.value=CameraXamount.value"
+            />
+          </div>
+          <div class="slider">
+            <p class="sliderDetails">Y</p>
+            <input
+              id="CameraYInput"
+              type="range"
+              min="0"
+              max="10"
+              step="0.1"
+              oninput="CameraYamount.value=CameraYInput.value"
+            />
+            <input
+              id="CameraYamount"
+              type="number"
+              min="0"
+              max="10"
+              oninput="CameraYInput.value=CameraYamount.value"
+            />
+          </div>
+          <div class="slider">
+            <p class="sliderDetails">Z</p>
+            <input
+              id="CameraZInput"
+              type="range"
+              min="0"
+              max="10"
+              step="0.1"
+              oninput="CameraZamount.value=CameraZInput.value"
+            />
+            <input
+              id="CameraZamount"
+              type="number"
+              min="0"
+              max="10"
+              oninput="CameraZInput.value=CameraZamount.value"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/main.js" type="module"></script>
+    <script>
+      function onClick() {
+        var GUI = document.getElementById("GUI");
+        var button = document.getElementById("Controls");
+        if (GUI.style.display === "none") {
+          GUI.style.display = "block";
+          button.innerHTML = "Close Controls";
+        } else {
+          GUI.style.display = "none";
+          button.innerHTML = "Open Controls";
+        }
+      }
+    </script>
   </body>
 </html>
