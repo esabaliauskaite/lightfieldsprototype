@@ -5,16 +5,15 @@
     <title>Airborne light field renderer</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
-
   <body>
+    <div id="gui_container"></div>
     <div id="canvas">
-      <div id="Controls" onclick="onClick()">Open Controls</div>
-      <div id="GUI">
+      <div id="Controls" onclick="onClick()">Close Controls</div>
+      <div class="GUI">
         <div>
-          <h4>Views</h4>
-          <div class="navel"><a>Single image</a></div>
-          <div class="navel"><a>Multiple image</a></div>
-          <div class="navel"><a>3D cloud</a></div>
+          <div class="navel"><a>Light field 1</a></div>
+          <div class="navel"><a>Light field 2</a></div>
+          <h4><a href="pointcloud.html">3D point cloud view</a></h4>
         </div>
         <div>
           <h4>Instructions</h4>
@@ -28,26 +27,26 @@
             <input
               id="FocusInput"
               type="range"
-              min="10"
-              max="300"
+              min="-100"
+              max="100"
               oninput="Focusamount.value=FocusInput.value"
             />
             <input
               id="Focusamount"
               type="number"
-              min="0"
-              max="300"
+              min="-100"
+              max="100"
               oninput="FocusInput.value=Focusamount.value"
             />
           </div>
         </span>
         <div>
-          <h4>Apeture</h4>
+          <h4>Aperture</h4>
           <div class="slider">
             <input
               id="ApetureInput"
               type="range"
-              min="0"
+              min="-10"
               max="10"
               step="0.1"
               oninput="Apetureamount.value=ApetureInput.value"
@@ -55,8 +54,8 @@
             <input
               id="Apetureamount"
               type="number"
-              min="0"
-              max="10"
+              min="-100"
+              max="100"
               oninput="ApetureInput.value=Apetureamount.value"
             />
           </div>
@@ -65,7 +64,7 @@
         <div>
           <h4>Field of view</h4>
           <div class="slider">
-            <input id="FOVAmount" type="number" min="10" max="100" />
+            <input id="FOVAmount" type="number" min="-100" max="100" />
           </div>
         </div>
 
@@ -131,7 +130,7 @@
     <script src="js/main.js" type="module"></script>
     <script>
       function onClick() {
-        var GUI = document.getElementById("GUI");
+        var GUI = document.querySelector(".GUI");
         var button = document.getElementById("Controls");
         if (GUI.style.display === "none") {
           GUI.style.display = "block";

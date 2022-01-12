@@ -1,12 +1,213 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.130.1/build/three.module.js";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/controls/OrbitControls.js";
+import { OBJLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/OBJLoader.js";
 
-let scene, renderer;
-let mainCamera, debugCamera;
+import vertexScreen from "./shaders/vertexScreen.js";
+import fragmentScreen from "./shaders/fragmentScreen.js";
+import vertex from "./shaders/vertex.js";
+import fragment from "./shaders/fragment.js";
 
-let windowWidth, windowHeight;
+// # Debug Scene ##
+const imgURL = "./data/debug_scene/";
+const poseURL = "./data/debug_scene/blender_poses.json";
+const demURL = "./data/zero_plane.obj";
+const singleImageFov = 60; // degrees
 
-let axesHelper, cameraHelper;
+let aperture = 4;
+document.getElementById("ApetureInput").value = aperture;
+document.getElementById("Apetureamount").value = aperture;
+
+function createProjectiveMaterial(projCamera, tex = null) {
+  var material = new THREE.ShaderMaterial({
+    uniforms: {
+      baseColor: {
+        value: new THREE.Color(0xcccccc),
+      },
+      cameraMatrix: {
+        type: "m4",
+        value: projCamera.matrixWorldInverse,
+      },
+      projMatrix: {
+        type: "m4",
+        value: projCamera.projectionMatrix,
+      },
+      myTexture: {
+        value: tex,
+      },
+      aperture: { value: aperture },
+    },
+    vertexShader: vertex,
+    fragmentShader: fragment,
+    side: THREE.DoubleSide,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
+    blendDst: THREE.OneFactor,
+    blendSrc: THREE.OneFactor,
+  });
+
+  return material;
+}
+
+function createScreenMaterial(texture) {
+  const materialScreen = new THREE.ShaderMaterial({
+    uniforms: {
+      tDiffuse: { value: texture },
+    },
+    vertexShader: vertexScreen,
+    fragmentShader: fragmentScreen,
+    depthWrite: false,
+    transparent: true,
+    blending: THREE.NormalBlending,
+  });
+
+  return materialScreen;
+}
+
+async function fetchPosesJSON(url) {
+  const response = await fetch(url);
+  const poses = await response.json();
+  return poses;
+}
+
+fetchPosesJSON(poseURL).then((poses) => {
+  if (!("images" in poses)) {
+    console.log(
+      `An error happened when loading JSON poses. Property images is not present.`
+    );
+  }
+  const positions = new Array();
+  const debugTable = [["image", "x", "y", "z", "rotX", "rotY", "rotZ"]];
+  for (const pose of poses.images) {
+    const useLegacy = !(
+      pose.hasOwnProperty("location") && pose.hasOwnProperty("rotation")
+    );
+    let pos = new THREE.Vector3();
+    let quat = new THREE.Quaternion();
+    let scale = new THREE.Vector3();
+
+    if (useLegacy) {
+      // matrix
+      const M = pose.M3x4;
+      let matrix = new THREE.Matrix4();
+      matrix.set(
+        M[0][0],
+        M[0][1],
+        M[0][2],
+        M[0][3],
+        M[1][0],
+        M[1][1],
+        M[1][2],
+        M[1][3],
+        M[2][0],
+        M[2][1],
+        M[2][2],
+        M[2][3],
+        0,
+        0,
+        0,
+        1
+      );
+      matrix.decompose(pos, quat, scale);
+      //console.log( `matrix for image ${pose.imagefile} has p: ${pos.x},${pos.y},${pos.z}, rot: ${quat}, scale: ${scale.x},${scale.y},${scale.z}.`)
+      // console.table(pos)
+      pos.x = -pos.x; // flip x coordinate
+    } else {
+      pos.fromArray(pose.location); // location stores as x,y,z coordinates
+      // rotation stored as quaternion (x,y,z,w)
+      quat.x = pose.rotation[0];
+      quat.y = pose.rotation[1];
+      quat.z = pose.rotation[2];
+      quat.w = pose.rotation[3];
+    }
+
+    // debug
+    {
+      const euler = new THREE.Euler().setFromQuaternion(quat, "ZYX"); // XYZ in Blender, inverse here!
+      debugTable.push([
+        pose.imagefile,
+        Math.round(pos.x * 100) / 100,
+        Math.round(pos.y * 100) / 100,
+        Math.round(pos.z * 100) / 100,
+        Math.round(THREE.MathUtils.radToDeg(euler.x)),
+        Math.round(THREE.MathUtils.radToDeg(euler.y)),
+        Math.round(THREE.MathUtils.radToDeg(euler.z)),
+      ]);
+    }
+    positions.push(pos);
+    // create cameras with the settings
+    const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
+    camera.position.copy(pos);
+    camera.applyQuaternion(quat); // Apply Quaternion
+
+    // rotation matrix
+    const R = new THREE.Matrix4().makeRotationFromQuaternion(quat);
+    //console.log(R);
+
+    // full camera matrix
+    const cameraMatrix = new THREE.Matrix4().compose(
+      pos,
+      quat,
+      new THREE.Vector3(1, 1, 1)
+    );
+    //console.log(cameraMatrix);
+
+    // load the image and assign the texture to the material
+    let url = imgURL + pose.imagefile;
+    url = url.replace(".tiff", ".png");
+    const tex = textureLoader.load(url);
+    const singleImageMaterial = createProjectiveMaterial(camera, tex);
+    singleImageMaterials.push(singleImageMaterial);
+    if (dem) {
+      dem.material = singleImageMaterial;
+    }
+    //camera.quaternion.set( quat );
+    singleImages.push(camera);
+    scene.add(camera);
+  }
+  console.table(positions);
+});
+
+// instantiate a texture loader
+const textureLoader = new THREE.TextureLoader();
+
+// instantiate a loader
+const loader = new OBJLoader();
+// load a resource
+loader.load(
+  demURL,
+  function (object) {
+    dem = object.children[0];
+    dem.scale.fromArray([1, 1, -1]);
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      flatShading: true,
+      vertexColors: false,
+      shininess: 0,
+      side: THREE.DoubleSide,
+    });
+    const wireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      wireframe: true,
+      transparent: true,
+    });
+    let wireframe = new THREE.Mesh(dem.geometry, wireframeMaterial);
+    //dem.add(wireframe);
+    scene.add(dem); // */
+    dem.position.z = -4;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
+    sceneGeometries.push(dem);
+    rtScene.add(dem);
+  },
+  function (xhr) {},
+  function (error) {
+    console.log(`An error happened when loading ${demURL}`);
+  }
+);
+
+const bgColor = new THREE.Color(0.89, 0.89, 0.89);
+const debugbgColor = new THREE.Color(0, 0, 0);
 
 const views = {
   main: {
@@ -14,8 +215,8 @@ const views = {
     bottom: 0,
     width: 1.0,
     height: 1.0,
-    background: new THREE.Color(0.89, 0.89, 0.89),
-    eye: [0, 0, 5],
+    background: bgColor,
+    eye: [0, 0, 4],
     up: [0, 1, 0],
     fov: 60,
   },
@@ -24,23 +225,43 @@ const views = {
     bottom: 0.8,
     width: 0.15,
     height: 0.2,
-    background: new THREE.Color(0, 0, 0),
-    eye: [-5, 2, 5],
+    background: debugbgColor,
+    eye: [0, -1, 5],
     up: [0, 1, 0],
     fov: 60,
   },
 };
 
+const mainView = views.main;
+const debugView = views.debug;
+
+let scene, renderer, dem;
+let singleImages = new Array();
+let singleImageMaterials = new Array();
+
+let sceneGeometries = [];
+
+let rtTarget;
+let rtScene;
+
+let mainCamera, debugCamera;
+let axesHelper, cameraHelper;
+
+let windowWidth, windowHeight;
+
 init();
-animate();
+render();
 
 function init() {
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  scene = new THREE.Scene();
+  rtScene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  scene = new THREE.Scene();
 
   axesHelper = new THREE.AxesHelper(25);
   scene.add(axesHelper);
@@ -48,47 +269,6 @@ function init() {
   const light = new THREE.DirectionalLight(0xffffff);
   light.position.set(0, 0, 1);
   scene.add(light);
-
-  //get and render the poses and images
-  fetch("data/debug_scene/poses.json")
-    .then((response) => response.json())
-    .then((data) => {
-      for (let i = 0; i < data.images.length; i++) {
-        const geo1 = new THREE.PlaneGeometry(2, 2);
-        const img1 = new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load(
-            "data/debug_scene/" + data.images[i].imagefile
-          ),
-        });
-        img1.side = THREE.DoubleSide;
-        const plane1 = new THREE.Mesh(geo1, img1);
-        plane1.applyMatrix4(parseMatrix(data.images[i].M3x4));
-
-        scene.add(plane1);
-        plane1.updateMatrix();
-      }
-    })
-    .catch((error) => console.log(error));
-
-  //all of the functions
-
-  //M3x4 to usable
-  function parseMatrix(json) {
-    let data = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-    for (let i = 0; i < json.length; i++) {
-      for (let j = 0; j < json.length; j++) {
-        if (typeof json[i][j] === "string") {
-          data[j * 4 + i] = parseFloat(json[i][j]);
-        }
-        if (typeof json[i][j] === "number") {
-          data[j * 4 + i] = json[i][j];
-        }
-      }
-    }
-    return new THREE.Matrix4().fromArray(data);
-  }
-  const mainView = views.main;
-  const debugView = views.debug;
 
   mainCamera = new THREE.PerspectiveCamera(
     mainView.fov,
@@ -99,6 +279,14 @@ function init() {
   mainCamera.position.fromArray(mainView.eye);
   mainCamera.up.fromArray(mainView.up);
   mainView.camera = mainCamera;
+
+  document.getElementById("CameraXInput").value = mainCamera.position.x;
+  document.getElementById("CameraYInput").value = mainCamera.position.y;
+  document.getElementById("CameraZInput").value = mainCamera.position.z;
+
+  document.getElementById("CameraXamount").value = mainCamera.position.x;
+  document.getElementById("CameraYamount").value = mainCamera.position.y;
+  document.getElementById("CameraZamount").value = mainCamera.position.z;
 
   //Orbit controls for user
   const mainControls = new OrbitControls(mainCamera, renderer.domElement);
@@ -121,34 +309,67 @@ function init() {
   debugCamera.up.fromArray(debugView.up);
   debugView.camera = debugCamera;
 
-  //Orbit controls for user
-  const debugControls = new OrbitControls(debugCamera, renderer.domElement);
-  debugControls.mouseButtons = {
-    LEFT: THREE.MOUSE.ROTATE,
-    MIDDLE: THREE.MOUSE.DOLLY,
-    RIGHT: THREE.MOUSE.PAN,
-  };
+  rtTarget = new THREE.WebGLRenderTarget(
+    window.innerWidth,
+    window.innerHeight,
+    {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.NearestFilter,
+      format: THREE.RGBAFormat,
+      type: THREE.FloatType,
+    }
+  );
+
+  const plane = new THREE.PlaneGeometry(2, 2);
+  const screenMaterial = createScreenMaterial(rtTarget.texture);
+  const quad = new THREE.Mesh(plane, screenMaterial);
+  scene.add(quad);
+  document.body.appendChild(renderer.domElement);
 }
 
-function updateSize() {
+function Resize() {
   if (windowWidth != window.innerWidth || windowHeight != window.innerHeight) {
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
-
     renderer.setSize(windowWidth, windowHeight);
   }
 }
 
-function animate() {
-  render();
+function setFocus() {
+  dem.position.z = document.getElementById("FocusInput").value;
+}
 
-  requestAnimationFrame(animate);
+function setCameraX() {
+  mainCamera.position.x = document.getElementById("CameraXInput").value;
+}
+function setCameraY() {
+  mainCamera.position.y = document.getElementById("CameraYInput").value;
+}
+function setCameraZ() {
+  mainCamera.position.z = document.getElementById("CameraZInput").value;
 }
 
 function render() {
-  updateSize();
+  requestAnimationFrame(render);
+  Resize();
+  document.getElementById("FocusInput").addEventListener("input", setFocus);
+  document.getElementById("Focusamount").addEventListener("change", setFocus);
+  document.getElementById("CameraXInput").addEventListener("input", setCameraX);
+  document.getElementById("CameraYInput").addEventListener("input", setCameraY);
+  document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
 
-  const mainView = views.main;
+  renderer.autoClear = false;
+  renderer.setRenderTarget(rtTarget);
+  renderer.setClearColor(new THREE.Color(0), 0);
+  renderer.clear();
+
+  const cam = views.main.camera;
+  for (let i = 0; i < singleImageMaterials.length; i++) {
+    dem.material = singleImageMaterials[i];
+    renderer.render(rtScene, cam);
+  }
+
+  renderer.setRenderTarget(null);
 
   const left = Math.floor(windowWidth * mainView.left);
   const bottom = Math.floor(windowHeight * mainView.bottom);
@@ -161,16 +382,31 @@ function render() {
   renderer.setViewport(left, bottom, width, height);
   renderer.setScissor(left, bottom, width, height);
   renderer.setScissorTest(true);
-  renderer.setClearColor(mainView.background);
+  renderer.setClearColor(bgColor, 1);
+  renderer.clear();
 
   mainCamera.aspect = width / height;
+  document.getElementById("FOVAmount").value = mainCamera.fov;
   mainCamera.updateProjectionMatrix();
   renderer.render(scene, mainCamera);
 
-  const debugView = views.debug;
-
   axesHelper.visible = true;
   cameraHelper.visible = true;
+
+  renderer.autoClear = false;
+
+  renderer.setRenderTarget(rtTarget);
+  renderer.setClearColor(new THREE.Color(0), 0);
+
+  renderer.clear();
+  const camD = views.debug.camera;
+
+  for (let i = 0; i < singleImageMaterials.length; i++) {
+    dem.material = singleImageMaterials[i];
+    renderer.render(rtScene, camD);
+  }
+
+  renderer.setRenderTarget(null);
 
   const debugleft = Math.floor(windowWidth * debugView.left);
   const debugbottom = Math.floor(windowHeight * debugView.bottom);
@@ -180,7 +416,8 @@ function render() {
   renderer.setViewport(debugleft, debugbottom, debugwidth, debugheight);
   renderer.setScissor(debugleft, debugbottom, debugwidth, debugheight);
   renderer.setScissorTest(true);
-  renderer.setClearColor(debugView.background);
+  renderer.setClearColor(debugbgColor, 1);
+  renderer.clear();
 
   debugCamera.aspect = width / height;
   debugCamera.updateProjectionMatrix();
