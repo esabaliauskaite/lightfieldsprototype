@@ -1,21 +1,22 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.130.1/build/three.module.js";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/controls/OrbitControls.js";
-import { OBJLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/OBJLoader.js";
+import { PCDLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PCDLoader.js";
 const scene = new THREE.Scene();
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(new THREE.Color(0.89, 0.89, 0.89));
 document.body.appendChild(renderer.domElement);
 
 const camera = new THREE.PerspectiveCamera(
-  75,
+  60,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
 
-camera.position.z = 55;
+camera.position.z = 60;
+camera.position.y = -5;
+camera.position.x = -3;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -28,46 +29,53 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
 });
 
-//let objFile = "debug_scene.obj";
-let objFile = "001.obj";
-//let objFile = "City.obj";
+let city = "./data/pcd/ciudadortogonal.26.pcd";
+let forest = "./data/pcd/Forest.pcd";
 
-function renderPointCloud1() {}
+const loader = new PCDLoader();
 
-function renderPointCloud2() {
-  //objFile = "City.obj";
-}
+renderPointCloud1();
 
-function PointCloud() {
-  const loader = new OBJLoader();
+function renderPointCloud1() {
   loader.load(
-    objFile,
-    (obj) => {
-      // the request was successfull
-      let material = new THREE.PointsMaterial({ color: 0xff0000, size: 0.5 });
-      let mesh = new THREE.Points(obj.children[0].geometry, material);
-      //mesh.position.y = -15 //this model is not exactly in the middle by default so I moved it myself
+    city,
+    function (mesh) {
+      scene.clear();
+      mesh.material.color.setHex(0xff7b00);
       scene.add(mesh);
-      console.log(objFile);
     },
-    (xhr) => {
-      // the request is in progress
-      console.log(xhr);
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
     },
-    (err) => {
-      // something went wrong
-      console.error("loading .obj went wrong, ", err);
+    function (error) {
+      console.log("An error happened");
     }
   );
-  renderer.clear();
 }
 
-function animate() {
+function renderPointCloud2() {
+  loader.load(
+    forest,
+    function (mesh) {
+      scene.clear();
+      mesh.material.color.setHex(0xa7c957);
+      scene.add(mesh);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+    },
+    function (error) {
+      console.log("An error happened");
+    }
+  );
+}
+
+function render() {
   document.getElementById("1").addEventListener("click", renderPointCloud1);
   document.getElementById("2").addEventListener("click", renderPointCloud2);
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
-PointCloud();
-animate();
+
+render();

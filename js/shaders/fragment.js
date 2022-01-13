@@ -5,6 +5,7 @@ uniform mat4 cameraMatrix;
 uniform mat4 projMatrix;
     
 varying vec4 vWorldPos;
+varying vec3 viewZ;
     
 void main() {
     
