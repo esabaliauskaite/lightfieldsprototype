@@ -15,13 +15,15 @@
           <div class="navel"><a>Light field 2</a></div>
           <h4><a href="pointcloud.html">3D point cloud view</a></h4>
         </div>
+
         <div>
           <h4>Instructions</h4>
           <p>Left mouse button to rotate</p>
           <p>Middle mouse button to dolly</p>
           <p>Right mouse button to pan</p>
         </div>
-        <span>
+
+        <div>
           <h4>Focus</h4>
           <div class="slider">
             <input
@@ -39,7 +41,8 @@
               oninput="FocusInput.value=Focusamount.value"
             />
           </div>
-        </span>
+        </div>
+
         <div>
           <h4>Aperture</h4>
           <div class="slider">
@@ -124,6 +127,24 @@
               oninput="CameraZInput.value=CameraZamount.value"
             />
           </div>
+        </div>
+        <br />
+        <div>
+          <input
+            type="checkbox"
+            id="CameraArray"
+            name="CameraArray"
+            value="Array"
+          />
+          <label for="CameraArray">Show Camera Array </label><br />
+
+          <input
+            type="checkbox"
+            id="DebugView"
+            name="DebugView"
+            value="DebugView"
+          />
+          <label for="DebugView"> Show Debug View </label><br />
         </div>
       </div>
     </div>

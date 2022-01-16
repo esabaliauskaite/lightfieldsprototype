@@ -3,19 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <title>Point Cloud View</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pointcloud.css" />
   </head>
   <body>
     <div id="canvas">
-      <div id="Controls"><a href="index.html">Light Field View</a></div>
-      <div class="PointCloudGUI">
-        <div>
-          <div id="1"><a>Point Cloud 1</a></div>
-          <br />
-          <div id="2"><a>Point Cloud 2</a></div>
-        </div>
+      <div class="Toggle">
+        <span><a href="index.html" class="LFtext">Light Field </a></span>
+        <span>
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="nav"
+              checked
+              onchange="checkNavigation()"
+            />
+            <span class="slider round"></span>
+          </label>
+        </span>
+        <span> <div class="PCtext">Point Cloud</div></span>
+      </div>
+      <div class="buttons">
+        <div id="PC1"><a class="PCText">Point Cloud 1</a></div>
+        <br />
+        <div id="PC2"><a class="PCText">Point Cloud 2</a></div>
       </div>
     </div>
     <script src="js/pointcloud.js" type="module"></script>
+    <script>
+      function checkNavigation() {
+        if (document.getElementById("nav").checked == false) {
+          window.location.href = "index.html";
+        }
+      }
+    </script>
   </body>
 </html>

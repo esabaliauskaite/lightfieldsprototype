@@ -6,6 +6,8 @@ import vertexScreen from "./shaders/vertexScreen.js";
 import fragmentScreen from "./shaders/fragmentScreen.js";
 import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
+import { cameraHelperArray } from "./modules/cameraHelperArray.js";
+import { BokehShader } from "./shaders/bokehShader.js";
 
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
@@ -13,9 +15,51 @@ const poseURL = "./data/debug_scene/blender_poses.json";
 const demURL = "./data/zero_plane.obj";
 const singleImageFov = 60; // degrees
 
-let aperture = 4;
-document.getElementById("ApetureInput").value = aperture;
-document.getElementById("Apetureamount").value = aperture;
+const bgColor = new THREE.Color(0.89, 0.89, 0.89);
+const debugbgColor = new THREE.Color(0, 0, 0);
+
+const views = {
+  main: {
+    left: 0,
+    bottom: 0,
+    width: 1.0,
+    height: 1.0,
+    background: bgColor,
+    eye: [0, 0, 8.5],
+    up: [0, 1, 0],
+    fov: 60,
+  },
+  debug: {
+    left: 0,
+    bottom: 0.8,
+    width: 0.15,
+    height: 0.2,
+    background: debugbgColor,
+    eye: [0, -1, 9],
+    up: [0, 1, 0],
+    fov: 60,
+  },
+};
+
+const mainView = views.main;
+const debugView = views.debug;
+
+let scene, renderer, dem;
+let singleImages = new Array();
+let singleImageMaterials = new Array();
+let cameraArrayHelper = new Array();
+
+let sceneGeometries = [];
+let aperture;
+let rtTarget;
+let rtScene;
+
+let mainCamera, debugCamera;
+let axesHelper, cameraHelper;
+
+let windowWidth, windowHeight;
+
+const bokeh_shader = BokehShader;
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -34,7 +78,6 @@ function createProjectiveMaterial(projCamera, tex = null) {
       myTexture: {
         value: tex,
       },
-      aperture: { value: aperture },
     },
     vertexShader: vertex,
     fragmentShader: fragment,
@@ -135,24 +178,11 @@ fetchPosesJSON(poseURL).then((poses) => {
       ]);
     }
     positions.push(pos);
-    // create cameras with the settings
+
     const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
     camera.position.copy(pos);
-    camera.applyQuaternion(quat); // Apply Quaternion
+    camera.applyQuaternion(quat);
 
-    // rotation matrix
-    const R = new THREE.Matrix4().makeRotationFromQuaternion(quat);
-    //console.log(R);
-
-    // full camera matrix
-    const cameraMatrix = new THREE.Matrix4().compose(
-      pos,
-      quat,
-      new THREE.Vector3(1, 1, 1)
-    );
-    //console.log(cameraMatrix);
-
-    // load the image and assign the texture to the material
     let url = imgURL + pose.imagefile;
     url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
@@ -161,7 +191,10 @@ fetchPosesJSON(poseURL).then((poses) => {
     if (dem) {
       dem.material = singleImageMaterial;
     }
-    //camera.quaternion.set( quat );
+    const helper = new cameraHelperArray(camera);
+    scene.add(helper);
+    helper.visible = false;
+    cameraArrayHelper.push(helper);
     singleImages.push(camera);
     scene.add(camera);
   }
@@ -179,75 +212,35 @@ loader.load(
   function (object) {
     dem = object.children[0];
     dem.scale.fromArray([1, 1, -1]);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      flatShading: true,
-      vertexColors: false,
-      shininess: 0,
-      side: THREE.DoubleSide,
-    });
     const wireframeMaterial = new THREE.MeshBasicMaterial({
       color: 0x000000,
       wireframe: true,
       transparent: true,
     });
-    let wireframe = new THREE.Mesh(dem.geometry, wireframeMaterial);
     //dem.add(wireframe);
     scene.add(dem); // */
-    dem.position.z = -4;
     document.getElementById("Focusamount").value = dem.position.z;
     document.getElementById("FocusInput").value = dem.position.z;
     sceneGeometries.push(dem);
     rtScene.add(dem);
   },
-  function (xhr) {},
-  function (error) {
+  function () {},
+  function () {
     console.log(`An error happened when loading ${demURL}`);
   }
 );
 
-const bgColor = new THREE.Color(0.89, 0.89, 0.89);
-const debugbgColor = new THREE.Color(0, 0, 0);
-
-const views = {
-  main: {
-    left: 0,
-    bottom: 0,
-    width: 1.0,
-    height: 1.0,
-    background: bgColor,
-    eye: [0, 0, 4],
-    up: [0, 1, 0],
-    fov: 60,
-  },
-  debug: {
-    left: 0,
-    bottom: 0.8,
-    width: 0.15,
-    height: 0.2,
-    background: debugbgColor,
-    eye: [0, -1, 5],
-    up: [0, 1, 0],
-    fov: 60,
-  },
-};
-
-const mainView = views.main;
-const debugView = views.debug;
-
-let scene, renderer, dem;
-let singleImages = new Array();
-let singleImageMaterials = new Array();
-
-let sceneGeometries = [];
-
-let rtTarget;
-let rtScene;
-
-let mainCamera, debugCamera;
-let axesHelper, cameraHelper;
-
-let windowWidth, windowHeight;
+function showCameraArray() {
+  if (document.getElementById("CameraArray").checked) {
+    for (let i = 0; i < cameraArrayHelper.length; i++) {
+      cameraArrayHelper[i].visible = true;
+    }
+  } else {
+    for (let i = 0; i < cameraArrayHelper.length; i++) {
+      cameraArrayHelper[i].visible = false;
+    }
+  }
+}
 
 init();
 render();
@@ -337,6 +330,7 @@ function Resize() {
 
 function setFocus() {
   dem.position.z = document.getElementById("FocusInput").value;
+  console.log(dem.position.z);
 }
 
 function setCameraX() {
@@ -349,6 +343,16 @@ function setCameraZ() {
   mainCamera.position.z = document.getElementById("CameraZInput").value;
 }
 
+function setVisibility() {
+  if (document.getElementById("CameraArray").checked) {
+    console.log("checked");
+    scene.clear();
+  } else {
+    scene.clear();
+    console.log("unchecked");
+  }
+}
+
 function render() {
   requestAnimationFrame(render);
   Resize();
@@ -357,6 +361,9 @@ function render() {
   document.getElementById("CameraXInput").addEventListener("input", setCameraX);
   document.getElementById("CameraYInput").addEventListener("input", setCameraY);
   document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
+  document
+    .getElementById("CameraArray")
+    .addEventListener("change", showCameraArray);
 
   renderer.autoClear = false;
   renderer.setRenderTarget(rtTarget);
@@ -390,36 +397,24 @@ function render() {
   mainCamera.updateProjectionMatrix();
   renderer.render(scene, mainCamera);
 
-  axesHelper.visible = true;
-  cameraHelper.visible = true;
+  if (document.querySelector("#DebugView").checked) {
+    axesHelper.visible = true;
+    cameraHelper.visible = true;
+    renderer.autoClear = false;
 
-  renderer.autoClear = false;
+    const debugleft = Math.floor(windowWidth * debugView.left);
+    const debugbottom = Math.floor(windowHeight * debugView.bottom);
+    const debugwidth = Math.floor(windowWidth * debugView.width);
+    const debugheight = Math.floor(windowHeight * debugView.height);
 
-  renderer.setRenderTarget(rtTarget);
-  renderer.setClearColor(new THREE.Color(0), 0);
+    renderer.setViewport(debugleft, debugbottom, debugwidth, debugheight);
+    renderer.setScissor(debugleft, debugbottom, debugwidth, debugheight);
+    renderer.setScissorTest(true);
+    renderer.setClearColor(debugbgColor, 1);
+    renderer.clear();
 
-  renderer.clear();
-  const camD = views.debug.camera;
-
-  for (let i = 0; i < singleImageMaterials.length; i++) {
-    dem.material = singleImageMaterials[i];
-    renderer.render(rtScene, camD);
+    debugCamera.aspect = debugView.width / debugView.height;
+    debugCamera.updateProjectionMatrix();
+    renderer.render(scene, debugCamera);
   }
-
-  renderer.setRenderTarget(null);
-
-  const debugleft = Math.floor(windowWidth * debugView.left);
-  const debugbottom = Math.floor(windowHeight * debugView.bottom);
-  const debugwidth = Math.floor(windowWidth * debugView.width);
-  const debugheight = Math.floor(windowHeight * debugView.height);
-
-  renderer.setViewport(debugleft, debugbottom, debugwidth, debugheight);
-  renderer.setScissor(debugleft, debugbottom, debugwidth, debugheight);
-  renderer.setScissorTest(true);
-  renderer.setClearColor(debugbgColor, 1);
-  renderer.clear();
-
-  debugCamera.aspect = width / height;
-  debugCamera.updateProjectionMatrix();
-  renderer.render(scene, debugCamera);
 }
