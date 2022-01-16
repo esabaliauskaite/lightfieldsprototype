@@ -15,7 +15,7 @@ const poseURL = "./data/debug_scene/blender_poses.json";
 const demURL = "./data/zero_plane.obj";
 const singleImageFov = 60; // degrees
 
-const bgColor = new THREE.Color(0.89, 0.89, 0.89);
+const bgColor = new THREE.Color(0, 0, 0);
 const debugbgColor = new THREE.Color(0, 0, 0);
 
 const views = {

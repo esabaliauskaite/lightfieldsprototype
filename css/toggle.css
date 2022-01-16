@@ -1,0 +1,43 @@
+input[id="nav"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+label[id="toggle"] {
+  cursor: pointer;
+  text-indent: -9999px;
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 28px;
+  margin-left: 5px;
+  margin-right: 5px;
+  background: #fff;
+  border-radius: 100px;
+}
+
+label[id="toggle"]:after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 25px;
+  height: 25px;
+  background: #48cae4;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+input[id="nav"]:checked + label[id="toggle"]:after {
+  background: #f24723;
+}
+
+input[id="nav"]:checked + label[id="toggle"]:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+input[id="nav"]:active:after {
+  width: 130px;
+}

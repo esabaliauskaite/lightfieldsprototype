@@ -4,158 +4,194 @@
     <meta charset="UTF-8" />
     <title>Airborne light field renderer</title>
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/toggle.css" />
   </head>
   <body>
     <div id="gui_container"></div>
     <div id="canvas">
-      <div id="Controls" onclick="onClick()">Close Controls</div>
+      <div class="Toggle">
+        <span><a href="index.html" class="LFtext">Light Field </a></span>
+        <span onchange="checkNavigation()">
+          <input type="checkbox" id="nav" /><label for="nav" id="toggle"
+            >Toggle</label
+          >
+        </span>
+        <span> <div class="PCtext">Point Cloud</div></span>
+      </div>
       <div class="GUI">
-        <div>
-          <div class="navel"><a>Light field 1</a></div>
-          <div class="navel"><a>Light field 2</a></div>
-          <h4><a href="pointcloud.html">3D point cloud view</a></h4>
-        </div>
-
-        <div>
-          <h4>Instructions</h4>
-          <p>Left mouse button to rotate</p>
-          <p>Middle mouse button to dolly</p>
-          <p>Right mouse button to pan</p>
-        </div>
-
-        <div>
-          <h4>Focus</h4>
-          <div class="slider">
-            <input
-              id="FocusInput"
-              type="range"
-              min="-100"
-              max="100"
-              oninput="Focusamount.value=FocusInput.value"
-            />
-            <input
-              id="Focusamount"
-              type="number"
-              min="-100"
-              max="100"
-              oninput="FocusInput.value=Focusamount.value"
-            />
+        <div class="close" onclick="onClick()">CLOSE</div>
+        <div class="func">
+          <div>
+            <p class="title">INSTRUCTIONS</p>
+            <p class="text">Left mouse button to rotate</p>
+            <p class="text">Middle mouse button to dolly</p>
+            <p class="text">Right mouse button to pan</p>
           </div>
-        </div>
 
-        <div>
-          <h4>Aperture</h4>
-          <div class="slider">
-            <input
-              id="ApetureInput"
-              type="range"
-              min="-10"
-              max="10"
-              step="0.1"
-              oninput="Apetureamount.value=ApetureInput.value"
-            />
-            <input
-              id="Apetureamount"
-              type="number"
-              min="-100"
-              max="100"
-              oninput="ApetureInput.value=Apetureamount.value"
-            />
+          <div>
+            <p class="title">CAMERA</p>
+            <div class="slider">
+              <p class="text">X</p>
+              <input
+                id="CameraXInput"
+                type="range"
+                min="0"
+                max="10"
+                step="0.1"
+                class="CameraInput"
+                oninput="CameraXamount.value=CameraXInput.value"
+              />
+              <input
+                id="CameraXamount"
+                type="number"
+                min="0"
+                max="10"
+                class="Amount"
+                oninput="CameraXInput.value=CameraXamount.value"
+              />
+            </div>
+            <div class="slider">
+              <p class="text">Y</p>
+              <input
+                id="CameraYInput"
+                type="range"
+                min="0"
+                max="10"
+                step="0.1"
+                class="CameraInput"
+                oninput="CameraYamount.value=CameraYInput.value"
+              />
+              <input
+                id="CameraYamount"
+                type="number"
+                min="0"
+                max="10"
+                class="Amount"
+                oninput="CameraYInput.value=CameraYamount.value"
+              />
+            </div>
+            <div class="slider">
+              <p class="text">Z</p>
+              <input
+                id="CameraZInput"
+                type="range"
+                min="0"
+                max="10"
+                step="0.1"
+                class="CameraInput"
+                oninput="CameraZamount.value=CameraZInput.value"
+              />
+              <input
+                id="CameraZamount"
+                type="number"
+                min="0"
+                max="10"
+                class="Amount"
+                oninput="CameraZInput.value=CameraZamount.value"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h4>Field of view</h4>
-          <div class="slider">
-            <input id="FOVAmount" type="number" min="-100" max="100" />
+          <div>
+            <p class="title">FOCUS</p>
+            <div class="slider">
+              <input
+                id="FocusInput"
+                type="range"
+                min="-100"
+                max="100"
+                class="Input"
+                oninput="Focusamount.value=FocusInput.value"
+              />
+              <input
+                id="Focusamount"
+                type="number"
+                min="-100"
+                max="100"
+                class="Amount"
+                oninput="FocusInput.value=Focusamount.value"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h4>Camera</h4>
-          <div class="slider">
-            <p class="sliderDetails">X</p>
-            <input
-              id="CameraXInput"
-              type="range"
-              min="0"
-              max="10"
-              step="0.1"
-              oninput="CameraXamount.value=CameraXInput.value"
-            />
-            <input
-              id="CameraXamount"
-              type="number"
-              min="0"
-              max="10"
-              oninput="CameraXInput.value=CameraXamount.value"
-            />
+          <div>
+            <p class="title">APERTURE</p>
+            <div class="slider">
+              <input
+                id="ApetureInput"
+                type="range"
+                min="-10"
+                max="10"
+                step="0.1"
+                class="Input"
+                oninput="Apetureamount.value=ApetureInput.value"
+              />
+              <input
+                id="Apetureamount"
+                type="number"
+                min="-100"
+                max="100"
+                class="Amount"
+                oninput="ApetureInput.value=Apetureamount.value"
+              />
+            </div>
           </div>
-          <div class="slider">
-            <p class="sliderDetails">Y</p>
-            <input
-              id="CameraYInput"
-              type="range"
-              min="0"
-              max="10"
-              step="0.1"
-              oninput="CameraYamount.value=CameraYInput.value"
-            />
-            <input
-              id="CameraYamount"
-              type="number"
-              min="0"
-              max="10"
-              oninput="CameraYInput.value=CameraYamount.value"
-            />
+          <br />
+          <div class="FOV">
+            <p class="title">FIELD OF VIEW</p>
+            <div class="slider">
+              <input
+                id="FOVAmount"
+                type="number"
+                min="-100"
+                max="100"
+                class="Amount"
+              />
+            </div>
           </div>
-          <div class="slider">
-            <p class="sliderDetails">Z</p>
-            <input
-              id="CameraZInput"
-              type="range"
-              min="0"
-              max="10"
-              step="0.1"
-              oninput="CameraZamount.value=CameraZInput.value"
-            />
-            <input
-              id="CameraZamount"
-              type="number"
-              min="0"
-              max="10"
-              oninput="CameraZInput.value=CameraZamount.value"
-            />
-          </div>
-        </div>
-        <br />
-        <div>
-          <input
-            type="checkbox"
-            id="CameraArray"
-            name="CameraArray"
-            value="Array"
-          />
-          <label for="CameraArray">Show Camera Array </label><br />
+          <br />
 
-          <input
-            type="checkbox"
-            id="DebugView"
-            name="DebugView"
-            value="DebugView"
-          />
-          <label for="DebugView"> Show Debug View </label><br />
+          <div class="optional">
+            <label for="CameraArray" id="showArray" class="labels title">
+              SHOW CAMERA ARRAY
+              <input
+                type="checkbox"
+                id="CameraArray"
+                name="CameraArray"
+                value="Array"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+
+          <div class="optional">
+            <label for="DebugView" id="showDebug" class="labels title"
+              >SHOW DEBUG VIEW
+              <input
+                type="checkbox"
+                id="DebugView"
+                name="DebugView"
+                value="DebugView"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
     <script src="js/main.js" type="module"></script>
     <script>
+      function checkNavigation() {
+        if (document.getElementById("nav").checked == true) {
+          window.location.href = "pointcloud.html";
+        }
+      }
       function onClick() {
         var GUI = document.querySelector(".GUI");
         var button = document.getElementById("Controls");
         if (GUI.style.display === "none") {
           GUI.style.display = "block";
-          button.innerHTML = "Close Controls";
+          button.innerHTML = "Close";
         } else {
           GUI.style.display = "none";
           button.innerHTML = "Open Controls";
