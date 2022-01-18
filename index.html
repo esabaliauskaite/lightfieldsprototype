@@ -18,18 +18,24 @@
         </span>
         <span> <div class="PCtext">Point Cloud</div></span>
       </div>
+      <div class="controlsbtn">
+        <img src="svg/controls.svg" alt="close" class="open">
+          <span class="controls" onclick="onClick()">CONTROLS</span>
+        </div>
       <div class="GUI">
-        <div class="close" onclick="onClick()">CLOSE</div>
+        <div class="closeicon">
+        <img src="svg/close.svg" alt="close" class="close">
+          <span class="close" onclick="onClick()">CLOSE</span></div>
         <div class="func">
-          <div>
+          <div class="block">
             <p class="title">INSTRUCTIONS</p>
-            <p class="text">Left mouse button to rotate</p>
-            <p class="text">Middle mouse button to dolly</p>
-            <p class="text">Right mouse button to pan</p>
+            <p class="text"><img src="svg/rotate.svg" alt="close" class="instructions">Left mouse button to rotate</p>
+            <p class="text"><img src="svg/dolly.svg" alt="close" class="instructions">Middle mouse button to dolly</p>
+            <p class="text"><img src="svg/pan.svg" alt="close" class="instructions">Right mouse button to pan</p>
           </div>
 
-          <div>
-            <p class="title">CAMERA</p>
+          <div class="block">
+            <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA</p>
             <div class="slider">
               <p class="text">X</p>
               <input
@@ -92,8 +98,8 @@
             </div>
           </div>
 
-          <div>
-            <p class="title">FOCUS</p>
+          <div class="block">
+            <p class="title"><img src="svg/focus.svg" alt="close" class="functionalities">FOCUS</p>
             <div class="slider">
               <input
                 id="FocusInput"
@@ -114,8 +120,8 @@
             </div>
           </div>
 
-          <div>
-            <p class="title">APERTURE</p>
+          <div class="block">
+            <p class="title"><img src="svg/aperture.svg" alt="close" class="functionalities">APERTURE</p>
             <div class="slider">
               <input
                 id="ApetureInput"
@@ -136,9 +142,9 @@
               />
             </div>
           </div>
-          <br />
-          <div class="FOV">
-            <p class="title">FIELD OF VIEW</p>
+
+          <div class="FOV block">
+            <p class="title"><img src="svg/fov.svg" alt="close" class="functionalities">FIELD OF VIEW</p>
             <div class="slider">
               <input
                 id="FOVAmount"
@@ -178,6 +184,12 @@
           </div>
         </div>
       </div>
+      <div class="buttons">
+        <div id="PC1" class="button"><a class="PCText">Light Field 1</a></div>
+        <br />
+        <div id="PC2" class="button"><a class="PCText">Light Field 2</a></div>
+      </div>
+    </div>
     </div>
     <script src="js/main.js" type="module"></script>
     <script>
@@ -188,13 +200,13 @@
       }
       function onClick() {
         var GUI = document.querySelector(".GUI");
-        var button = document.getElementById("Controls");
+        var button = document.querySelector(".controls");
         if (GUI.style.display === "none") {
           GUI.style.display = "block";
-          button.innerHTML = "Close";
+          button.style.display = "none";
         } else {
           GUI.style.display = "none";
-          button.innerHTML = "Open Controls";
+          button.style.display = "block";
         }
       }
     </script>

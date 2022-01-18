@@ -20,8 +20,8 @@ label[id="toggle"] {
 label[id="toggle"]:after {
   content: "";
   position: absolute;
-  top: 1px;
-  left: 1px;
+  top: 2px;
+  left: 3px;
   width: 25px;
   height: 25px;
   background: #48cae4;
@@ -34,7 +34,7 @@ input[id="nav"]:checked + label[id="toggle"]:after {
 }
 
 input[id="nav"]:checked + label[id="toggle"]:after {
-  left: calc(100% - 5px);
+  left: calc(100% - 3px);
   transform: translateX(-100%);
 }
 

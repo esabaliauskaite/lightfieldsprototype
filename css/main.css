@@ -120,12 +120,12 @@ input[type="number"] {
   text-align: center;
   text-decoration: none;
   font-size: 16px;
-  margin: 4px 2px;
+  margin: 2px 2px;
   cursor: pointer;
   position: fixed;
   z-index: 1;
   top: 1%;
-  left: 42%;
+  left: 40%;
   display: flex;
   justify-items: center;
 }
@@ -174,6 +174,7 @@ input[type="number"] {
 }
 
 .text {
+  display: flex;
   text-align: left;
   font: normal normal 400 24px/30px Rajdhani;
   letter-spacing: 0px;
@@ -187,7 +188,7 @@ input[type="number"] {
 
 div .slider {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .Input {
@@ -287,4 +288,118 @@ div .slider {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+.buttons {
+  background-color: transparent;
+  border: none;
+  padding: 15px 32px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  position: fixed;
+  z-index: 1;
+  bottom: 3%;
+  right: 35%;
+  display: flex;
+  justify-items: center;
+}
+
+.button {
+  width: 200px;
+  height: 50px;
+  background: #70707059 0% 0% no-repeat padding-box;
+  box-shadow: 15px 15px 15px #00000029;
+  border: 1px solid #ffffff40;
+  opacity: 1;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 50px;
+}
+
+.PCText {
+  margin-top: 5px;
+  font: normal normal 600 22px/28px Rajdhani;
+  letter-spacing: 1.23px;
+  color: #ffffff;
+  opacity: 1;
+  line-height: 1em;
+}
+
+#PC1:hover,
+#PC2:hover {
+  background: #48cae459 0% 0% no-repeat padding-box;
+  box-shadow: 15px 15px 15px #00000029;
+  border: 1px solid #ffffff40;
+  opacity: 1;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.clicked {
+  background: #48cae459 0% 0% no-repeat padding-box;
+  box-shadow: 15px 15px 15px #00000029;
+  border: 1px solid #ffffff40;
+  opacity: 1;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.controlsbtn {
+  display: flex;
+  align-items: center;
+  width: 210px;
+  height: 50px;
+  font: normal normal 500 36px/45px Rajdhani;
+  color: #ffffff;
+  opacity: 1;
+  background: transparent linear-gradient(157deg, #70707066 0%, #3838382e 100%)
+    0% 0% no-repeat padding-box;
+  box-shadow: 15px 15px 15px #00000029;
+  opacity: 1;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  position: fixed;
+  z-index: 1;
+  top: 2%;
+  right: 2%;
+}
+
+.instructions {
+  width: 25px;
+  height: 25px;
+  margin-top: 5px;
+  padding-right: 5px;
+}
+
+.functionalities {
+  width: 20px;
+  height: 20px;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+.open {
+  width: 45px;
+  height: 45px;
+}
+.close {
+  width: 45px;
+  height: 45px;
+}
+
+.closeicon {
+  padding-top: 22px;
+  padding-bottom: 22px;
+  display: flex;
+}
+
+.block {
+  padding-bottom: 20px;
 }

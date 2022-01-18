@@ -2,8 +2,6 @@ import * as THREE from "https://cdn.skypack.dev/three@0.130.1/build/three.module
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/controls/OrbitControls.js";
 import { PCDLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PCDLoader.js";
 
-let windowWidth, windowHeight;
-
 const scene = new THREE.Scene();
 
 const renderer = new THREE.WebGLRenderer();
@@ -34,15 +32,21 @@ const loader = new PCDLoader();
 renderPointCloud1();
 
 function renderPointCloud1() {
+  document.getElementById("PC2").classList.remove("clicked");
+  document.getElementById("PC1").classList.add("clicked");
   loader.load(
     city,
     function (mesh) {
+      document.getElementById("canvas").style.display = "block";
+      document.getElementById("loader").style.display = "none";
       scene.clear();
       mesh.material.color.setHex(0xff7b00);
       scene.add(mesh);
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("canvas").style.display = "none";
     },
     function (error) {
       console.log("An error happened");
@@ -51,15 +55,21 @@ function renderPointCloud1() {
 }
 
 function renderPointCloud2() {
+  document.getElementById("PC2").classList.add("clicked");
+  document.getElementById("PC1").classList.remove("clicked");
   loader.load(
     forest,
     function (mesh) {
+      document.getElementById("canvas").style.display = "block";
+      document.getElementById("loader").style.display = "none";
       scene.clear();
       mesh.material.color.setHex(0xa7c957);
       scene.add(mesh);
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("canvas").style.display = "none";
     },
     function (error) {
       console.log("An error happened");
