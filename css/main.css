@@ -206,12 +206,12 @@ div .slider {
   appearance: none;
   width: 284px;
   height: 6px;
-  background: #ffffff 0% 0% no-repeat padding-box;
   margin-top: 4.5px;
   margin-bottom: 4.5px;
   margin-left: 5px;
   margin-right: 20px;
 }
+
 .Amount {
   border: 2px solid #ffffff;
   border-radius: 5px;

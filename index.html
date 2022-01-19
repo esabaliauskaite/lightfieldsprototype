@@ -5,6 +5,7 @@
     <title>Airborne light field renderer</title>
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/toggle.css" />
+    <link rel="stylesheet" href="css/slider.css" />
   </head>
   <body>
     <div id="gui_container"></div>
@@ -24,14 +25,14 @@
         </div>
       <div class="GUI">
         <div class="closeicon">
-        <img src="svg/close.svg" alt="close" class="close">
-          <span class="close" onclick="onClick()">CLOSE</span></div>
+        <img src="svg/close.svg" alt="close" class="close" onclick="onClick()">
+          <span class="close">CLOSE</span></div>
         <div class="func">
           <div class="block">
             <p class="title">INSTRUCTIONS</p>
-            <p class="text"><img src="svg/rotate.svg" alt="close" class="instructions">Left mouse button to rotate</p>
-            <p class="text"><img src="svg/dolly.svg" alt="close" class="instructions">Middle mouse button to dolly</p>
-            <p class="text"><img src="svg/pan.svg" alt="close" class="instructions">Right mouse button to pan</p>
+            <div class="optional"><img src="svg/rotate.svg" alt="close" class="instructions"><p class="text">Left mouse button to rotate</p></div>
+            <div class="optional"><img src="svg/dolly.svg" alt="close" class="instructions"><p class="text">Middle mouse button to dolly</p></div>
+            <div class="optional"><img src="svg/pan.svg" alt="close" class="instructions"><p class="text">Right mouse button to pan</p></div>
           </div>
 
           <div class="block">
@@ -44,7 +45,8 @@
                 min="0"
                 max="10"
                 step="0.1"
-                class="CameraInput"
+                value="0"
+                class="CameraInput styled-slider-cameraX slider-progress"
                 oninput="CameraXamount.value=CameraXInput.value"
               />
               <input
@@ -64,7 +66,8 @@
                 min="0"
                 max="10"
                 step="0.1"
-                class="CameraInput"
+                value="0"
+                class="CameraInput styled-slider-cameraY slider-progress"
                 oninput="CameraYamount.value=CameraYInput.value"
               />
               <input
@@ -84,7 +87,8 @@
                 min="0"
                 max="10"
                 step="0.1"
-                class="CameraInput"
+                value="8.5"
+                class="CameraInput styled-slider-cameraZ slider-progress"
                 oninput="CameraZamount.value=CameraZInput.value"
               />
               <input
@@ -106,7 +110,8 @@
                 type="range"
                 min="-100"
                 max="100"
-                class="Input"
+                value="-4"
+                class="Input styled-slider slider-progress"
                 oninput="Focusamount.value=FocusInput.value"
               />
               <input
@@ -129,7 +134,7 @@
                 min="-10"
                 max="10"
                 step="0.1"
-                class="Input"
+                class="Input styled-slider slider-progress"
                 oninput="Apetureamount.value=ApetureInput.value"
               />
               <input
@@ -144,7 +149,8 @@
           </div>
 
           <div class="FOV block">
-            <p class="title"><img src="svg/fov.svg" alt="close" class="functionalities">FIELD OF VIEW</p>
+            <img src="svg/fov.svg" alt="close" class="functionalities">
+            <p class="title">FIELD OF VIEW</p>
             <div class="slider">
               <input
                 id="FOVAmount"
@@ -208,6 +214,34 @@
           GUI.style.display = "none";
           button.style.display = "block";
         }
+      }
+
+      for (let e of document.querySelectorAll('input[type="range"].styled-slider')) {
+        e.style.setProperty('--value', e.value);
+        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      }
+
+      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraZ')) {
+        e.style.setProperty('--value', e.value);
+        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      }
+
+      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraY')) {
+        e.style.setProperty('--value', e.value);
+        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      }
+      
+      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraX')) {
+        e.style.setProperty('--value', e.value);
+        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       }
     </script>
   </body>

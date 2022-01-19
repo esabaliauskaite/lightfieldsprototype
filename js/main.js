@@ -15,7 +15,7 @@ const poseURL = "./data/debug_scene/blender_poses.json";
 const demURL = "./data/zero_plane.obj";
 const singleImageFov = 60; // degrees
 
-const bgColor = new THREE.Color(0, 0, 0);
+const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
 
 const views = {
@@ -219,6 +219,7 @@ loader.load(
     });
     //dem.add(wireframe);
     scene.add(dem); // */
+    dem.position.z = -4;
     document.getElementById("Focusamount").value = dem.position.z;
     document.getElementById("FocusInput").value = dem.position.z;
     sceneGeometries.push(dem);
