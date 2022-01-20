@@ -6,28 +6,29 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/toggle.css" />
     <link rel="stylesheet" href="css/slider.css" />
+    <link rel="stylesheet" href="css/checkbox.css" />
   </head>
   <body>
     <div id="gui_container"></div>
     <div id="canvas">
       <div class="Toggle">
-        <span><a href="index.html" class="LFtext">Light Field </a></span>
+        <span><a href="/" class="LFToglleText">Light Field </a></span>
         <span onchange="checkNavigation()">
           <input type="checkbox" id="nav" /><label for="nav" id="toggle"
             >Toggle</label
           >
         </span>
-        <span> <div class="PCtext">Point Cloud</div></span>
+        <span> <div class="PCToggleText">Point Cloud</div></span>
       </div>
-      <div class="controlsbtn">
-        <img src="svg/controls.svg" alt="close" class="open">
+      <div class="controlsbtn button">
+        <img src="svg/controls.svg" alt="close" class="icons">
           <span class="controls" onclick="onClick()">CONTROLS</span>
         </div>
       <div class="GUI">
         <div class="closeicon">
-        <img src="svg/close.svg" alt="close" class="close" onclick="onClick()">
+        <img src="svg/close.svg" alt="close" class="icons close" onclick="onClick()">
           <span class="close">CLOSE</span></div>
-        <div class="func">
+        <div class="menu">
           <div class="block">
             <p class="title">INSTRUCTIONS</p>
             <div class="optional"><img src="svg/rotate.svg" alt="close" class="instructions"><p class="text">Left mouse button to rotate</p></div>
@@ -46,7 +47,7 @@
                 max="10"
                 step="0.1"
                 value="0"
-                class="CameraInput styled-slider-cameraX slider-progress"
+                class="CameraSlidersSize styled-slider-cameraX slider-progress"
                 oninput="CameraXamount.value=CameraXInput.value"
               />
               <input
@@ -54,7 +55,7 @@
                 type="number"
                 min="0"
                 max="10"
-                class="Amount"
+                class="TextInput"
                 oninput="CameraXInput.value=CameraXamount.value"
               />
             </div>
@@ -67,7 +68,7 @@
                 max="10"
                 step="0.1"
                 value="0"
-                class="CameraInput styled-slider-cameraY slider-progress"
+                class="CameraSlidersSize styled-slider-cameraY slider-progress"
                 oninput="CameraYamount.value=CameraYInput.value"
               />
               <input
@@ -75,7 +76,7 @@
                 type="number"
                 min="0"
                 max="10"
-                class="Amount"
+                class="TextInput"
                 oninput="CameraYInput.value=CameraYamount.value"
               />
             </div>
@@ -88,7 +89,7 @@
                 max="10"
                 step="0.1"
                 value="8.5"
-                class="CameraInput styled-slider-cameraZ slider-progress"
+                class="CameraSlidersSize styled-slider-cameraZ slider-progress"
                 oninput="CameraZamount.value=CameraZInput.value"
               />
               <input
@@ -96,7 +97,7 @@
                 type="number"
                 min="0"
                 max="10"
-                class="Amount"
+                class="TextInput"
                 oninput="CameraZInput.value=CameraZamount.value"
               />
             </div>
@@ -111,7 +112,7 @@
                 min="-100"
                 max="100"
                 value="-4"
-                class="Input styled-slider slider-progress"
+                class="slidersSize styled-slider slider-progress"
                 oninput="Focusamount.value=FocusInput.value"
               />
               <input
@@ -119,7 +120,7 @@
                 type="number"
                 min="-100"
                 max="100"
-                class="Amount"
+                class="TextInput"
                 oninput="FocusInput.value=Focusamount.value"
               />
             </div>
@@ -134,7 +135,7 @@
                 min="-10"
                 max="10"
                 step="0.1"
-                class="Input styled-slider slider-progress"
+                class="slidersSize styled-slider slider-progress"
                 oninput="Apetureamount.value=ApetureInput.value"
               />
               <input
@@ -142,7 +143,7 @@
                 type="number"
                 min="-100"
                 max="100"
-                class="Amount"
+                class="TextInput"
                 oninput="ApetureInput.value=Apetureamount.value"
               />
             </div>
@@ -157,7 +158,7 @@
                 type="number"
                 min="-100"
                 max="100"
-                class="Amount"
+                class="TextInput"
               />
             </div>
           </div>
@@ -191,9 +192,9 @@
         </div>
       </div>
       <div class="buttons">
-        <div id="PC1" class="button"><a class="PCText">Light Field 1</a></div>
+        <div id="PC1" class="button"><a class="buttonText">Light Field 1</a></div>
         <br />
-        <div id="PC2" class="button"><a class="PCText">Light Field 2</a></div>
+        <div id="PC2" class="button"><a class="buttonText">Light Field 2</a></div>
       </div>
     </div>
     </div>
@@ -225,22 +226,22 @@
 
       for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraZ')) {
         e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
         e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       }
 
       for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraY')) {
         e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
         e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       }
       
       for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraX')) {
         e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
+        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
+        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
         e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       }
     </script>

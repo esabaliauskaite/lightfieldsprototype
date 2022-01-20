@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Point Cloud View</title>
-    <link rel="stylesheet" href="css/pointcloud.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/toggle.css" />
     <link rel="stylesheet" href="css/loader.css" />
   </head>
@@ -11,18 +11,22 @@
     <div id="loader"></div>
     <div id="canvas">
       <div class="Toggle">
-        <span><a href="index.html" class="LFtext">Light Field </a></span>
+        <span><a href="/" class="LFToglleText">Light Field </a></span>
         <span onchange="checkNavigation()">
           <input type="checkbox" id="nav" checked /><label for="nav" id="toggle"
             >Toggle</label
           >
         </span>
-        <span> <div class="PCtext">Point Cloud</div></span>
+        <span> <div class="PCToggleText">Point Cloud</div></span>
       </div>
       <div class="buttons">
-        <div id="PC1" class="button"><a class="PCText">Point Cloud 1</a></div>
+        <div id="PC1" class="button">
+          <a class="buttonText">Point Cloud 1</a>
+        </div>
         <br />
-        <div id="PC2" class="button"><a class="PCText">Point Cloud 2</a></div>
+        <div id="PC2" class="button">
+          <a class="buttonText">Point Cloud 2</a>
+        </div>
       </div>
     </div>
     <script src="js/pointcloud.js" type="module"></script>

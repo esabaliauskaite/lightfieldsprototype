@@ -4,40 +4,6 @@ body {
   margin: 0;
   font-family: "Lato", sans-serif;
 }
-.info {
-  position: absolute;
-  text-align: left;
-  z-index: 100;
-  display: block;
-  color: white;
-  font-weight: 300;
-  text-shadow: 0px 2px 1px rgba(0, 0, 0, 0.5);
-  user-select: none;
-}
-#gui_container {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  height: 0;
-}
-
-#c {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.split {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-.split > div {
-  width: 100%;
-  height: 100%;
-}
 
 .GUI {
   width: 466px;
@@ -54,55 +20,6 @@ body {
   right: 0%;
 }
 
-.PointCloudGUI {
-  width: 250px;
-  height: 50px;
-  padding: 30px;
-  padding-left: 40px;
-  margin: 20px;
-  background: #fcfcfc;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0px 15px 40px #7e6d5766;
-  position: fixed;
-  z-index: 1;
-  top: 10%;
-  right: -3%;
-}
-
-.debug {
-  width: 200px;
-  height: 200px;
-  padding: 30px;
-  padding-left: 40px;
-  margin: 20px;
-  background: #fcfcfc;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0px 15px 40px #7e6d5766;
-  position: fixed;
-  z-index: 1;
-  display: none;
-}
-
-.debugtext {
-  cursor: move;
-}
-
-.navel {
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-#rangeValue {
-  float: right;
-  margin: 0px;
-}
-.sliderDetails {
-  float: left;
-  font-size: 12px;
-  margin: 0px;
-}
 p {
   font-size: 12px;
   margin: 5px;
@@ -130,7 +47,7 @@ input[type="number"] {
   justify-items: center;
 }
 
-.LFtext {
+.LFToglleText {
   top: 132px;
   left: 1004px;
   width: 128px;
@@ -144,7 +61,7 @@ input[type="number"] {
   cursor: pointer;
 }
 
-.PCtext {
+.PCToggleText {
   top: 132px;
   left: 1004px;
   width: 128px;
@@ -153,14 +70,6 @@ input[type="number"] {
   font: normal normal 600 22px/28px Rajdhani;
   letter-spacing: 1.23px;
   color: #fff;
-  opacity: 1;
-}
-
-.close {
-  text-align: left;
-  font: normal normal 500 36px/45px Rajdhani;
-  letter-spacing: 2.02px;
-  color: #ffffff;
   opacity: 1;
 }
 
@@ -182,27 +91,27 @@ input[type="number"] {
   opacity: 1;
 }
 
-.func {
+.menu {
   padding-left: 28.5px;
 }
 
+/* sliders in the center of div */
 div .slider {
   display: flex;
   align-items: center;
 }
 
-.Input {
+.slidersSize {
   appearance: none;
   width: 310px;
   height: 6px;
-  background: #ffffff 0% 0% no-repeat padding-box;
   margin-top: 4.5px;
   margin-bottom: 4.5px;
   margin-left: 5px;
   margin-right: 15px;
 }
 
-.CameraInput {
+.CameraSlidersSize {
   appearance: none;
   width: 284px;
   height: 6px;
@@ -212,7 +121,7 @@ div .slider {
   margin-right: 20px;
 }
 
-.Amount {
+.TextInput {
   border: 2px solid #ffffff;
   border-radius: 5px;
   opacity: 1;
@@ -234,60 +143,6 @@ div .slider {
   display: flex;
   align-items: flex-start;
   padding-right: 25px;
-}
-
-.labels {
-  display: block;
-  position: relative;
-  padding-left: 5px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.labels input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 25px;
-  height: 25px;
-  background: #70707059 0% 0% no-repeat padding-box;
-  border: 1px solid #ffffff7d;
-  opacity: 1;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.labels input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.labels .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid #48cae4;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
 }
 
 .buttons {
@@ -323,7 +178,7 @@ div .slider {
   margin-right: 50px;
 }
 
-.PCText {
+.buttonText {
   margin-top: 5px;
   font: normal normal 600 22px/28px Rajdhani;
   letter-spacing: 1.23px;
@@ -359,12 +214,6 @@ div .slider {
   font: normal normal 500 36px/45px Rajdhani;
   color: #ffffff;
   opacity: 1;
-  background: transparent linear-gradient(157deg, #70707066 0%, #3838382e 100%)
-    0% 0% no-repeat padding-box;
-  box-shadow: 15px 15px 15px #00000029;
-  opacity: 1;
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   position: fixed;
   z-index: 1;
   top: 2%;
@@ -385,13 +234,17 @@ div .slider {
   padding-right: 10px;
 }
 
-.open {
+.icons {
   width: 45px;
   height: 45px;
 }
+
 .close {
-  width: 45px;
-  height: 45px;
+  text-align: left;
+  font: normal normal 500 36px/45px Rajdhani;
+  letter-spacing: 2.02px;
+  color: #ffffff;
+  opacity: 1;
 }
 
 .closeicon {
