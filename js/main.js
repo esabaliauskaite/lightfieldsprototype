@@ -7,7 +7,6 @@ import fragmentScreen from "./shaders/fragmentScreen.js";
 import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
-import { BokehShader } from "./shaders/bokehShader.js";
 
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
@@ -25,7 +24,7 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 8.5],
+    eye: [0, 0, 4],
     up: [0, 1, 0],
     fov: 60,
   },
@@ -50,7 +49,6 @@ let singleImageMaterials = new Array();
 let cameraArrayHelper = new Array();
 
 let sceneGeometries = [];
-let aperture;
 let rtTarget;
 let rtScene;
 
@@ -58,8 +56,6 @@ let mainCamera, debugCamera;
 let axesHelper, cameraHelper;
 
 let windowWidth, windowHeight;
-
-const bokeh_shader = BokehShader;
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -198,15 +194,11 @@ fetchPosesJSON(poseURL).then((poses) => {
     singleImages.push(camera);
     scene.add(camera);
   }
-  console.table(positions);
 });
 
-// instantiate a texture loader
 const textureLoader = new THREE.TextureLoader();
 
-// instantiate a loader
 const loader = new OBJLoader();
-// load a resource
 loader.load(
   demURL,
   function (object) {
@@ -342,16 +334,6 @@ function setCameraY() {
 }
 function setCameraZ() {
   mainCamera.position.z = document.getElementById("CameraZInput").value;
-}
-
-function setVisibility() {
-  if (document.getElementById("CameraArray").checked) {
-    console.log("checked");
-    scene.clear();
-  } else {
-    scene.clear();
-    console.log("unchecked");
-  }
 }
 
 function renderLightField1() {
