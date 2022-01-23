@@ -8,13 +8,9 @@ varying vec4 vWorldPos;
 varying vec3 viewZ;
     
 void main() {
-    
     vec4 texc = projMatrix * cameraMatrix * vWorldPos;
     vec2 uv = texc.xy / texc.w / 2.0 + 0.5;
-    
-    vec4 color = ( max( uv.x, uv.y ) <= 1. && min( uv.x, uv.y ) >= 0. ) ? vec4(texture(myTexture, uv).rgb, 1.0) : vec4(0.0);
-    gl_FragColor = color;
-    
+    gl_FragColor = vec4(texture(myTexture, uv).rgb, 1.0);
 }
 `;
 export default fragment;

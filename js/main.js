@@ -132,7 +132,6 @@ fetchPosesJSON(poseURL).then((poses) => {
     let scale = new THREE.Vector3();
 
     if (useLegacy) {
-      // matrix
       const M = pose.M3x4;
       let matrix = new THREE.Matrix4();
       matrix.set(
@@ -154,21 +153,17 @@ fetchPosesJSON(poseURL).then((poses) => {
         1
       );
       matrix.decompose(pos, quat, scale);
-      //console.log( `matrix for image ${pose.imagefile} has p: ${pos.x},${pos.y},${pos.z}, rot: ${quat}, scale: ${scale.x},${scale.y},${scale.z}.`)
-      // console.table(pos)
-      pos.x = -pos.x; // flip x coordinate
+      pos.x = -pos.x;
     } else {
-      pos.fromArray(pose.location); // location stores as x,y,z coordinates
-      // rotation stored as quaternion (x,y,z,w)
+      pos.fromArray(pose.location);
       quat.x = pose.rotation[0];
       quat.y = pose.rotation[1];
       quat.z = pose.rotation[2];
       quat.w = pose.rotation[3];
     }
 
-    // debug
     {
-      const euler = new THREE.Euler().setFromQuaternion(quat, "ZYX"); // XYZ in Blender, inverse here!
+      const euler = new THREE.Euler().setFromQuaternion(quat, "ZYX");
       debugTable.push([
         pose.imagefile,
         Math.round(pos.x * 100) / 100,
@@ -210,16 +205,11 @@ loader.load(
   function (object) {
     dem = object.children[0];
     dem.scale.fromArray([1, 1, -1]);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      wireframe: true,
-      transparent: true,
-    });
-    //dem.add(wireframe);
-    scene.add(dem); // */
+    scene.add(dem);
     dem.position.z = -4;
     document.getElementById("Focusamount").value = dem.position.z;
     document.getElementById("FocusInput").value = dem.position.z;
+    focus = dem.position.z;
     sceneGeometries.push(dem);
     rtScene.add(dem);
   },
@@ -271,7 +261,6 @@ function init() {
   mainCamera.position.fromArray(mainView.eye);
   mainCamera.up.fromArray(mainView.up);
   mainView.camera = mainCamera;
-  console.log(mainCamera.focus);
 
   document.getElementById("CameraXInput").value = mainCamera.position.x;
   document.getElementById("CameraYInput").value = mainCamera.position.y;
@@ -323,8 +312,8 @@ function init() {
 
   bokehPass = new BokehPass(scene, mainCamera, {
     focus: 1.0,
-    aperture: 0.025,
-    maxblur: 0.01,
+    aperture: 0.015,
+    maxblur: 0.005,
 
     width: window.innerWidth,
     height: window.innerHeight,
@@ -349,7 +338,7 @@ function Resize() {
 }
 
 const effectController = {
-  focus: 50.0,
+  focus: -4.0,
   aperture: 5,
 };
 
@@ -361,6 +350,8 @@ function matChanger() {
 function setFocus() {
   effectController.focus = dem.position.z;
   dem.position.z = document.getElementById("FocusInput").value;
+  document.getElementById("FocusInput").value =
+    document.getElementById("Focusamount").value;
   matChanger();
 }
 
