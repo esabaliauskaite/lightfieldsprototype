@@ -8,6 +8,10 @@ import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
 
+import { EffectComposer } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/RenderPass";
+import { BokehPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/BokehPass";
+
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
 const poseURL = "./data/debug_scene/blender_poses.json";
@@ -56,6 +60,8 @@ let mainCamera, debugCamera;
 let axesHelper, cameraHelper;
 
 let windowWidth, windowHeight;
+
+let renderPass, bokehPass, composer;
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -265,6 +271,7 @@ function init() {
   mainCamera.position.fromArray(mainView.eye);
   mainCamera.up.fromArray(mainView.up);
   mainView.camera = mainCamera;
+  console.log(mainCamera.focus);
 
   document.getElementById("CameraXInput").value = mainCamera.position.x;
   document.getElementById("CameraYInput").value = mainCamera.position.y;
@@ -311,6 +318,25 @@ function init() {
   const quad = new THREE.Mesh(plane, screenMaterial);
   scene.add(quad);
   document.body.appendChild(renderer.domElement);
+
+  renderPass = new RenderPass(scene, mainCamera);
+
+  bokehPass = new BokehPass(scene, mainCamera, {
+    focus: 1.0,
+    aperture: 0.025,
+    maxblur: 0.01,
+
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  composer = new EffectComposer(renderer);
+
+  composer.addPass(renderPass);
+  composer.addPass(bokehPass);
+
+  document.getElementById("Apetureamount").value =
+    bokehPass.uniforms["aperture"].value;
 }
 
 function Resize() {
@@ -318,14 +344,33 @@ function Resize() {
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
     renderer.setSize(windowWidth, windowHeight);
+    composer.setSize(windowWidth, windowHeight);
   }
 }
 
-function setFocus() {
-  dem.position.z = document.getElementById("FocusInput").value;
-  console.log(dem.position.z);
+const effectController = {
+  focus: 50.0,
+  aperture: 5,
+};
+
+function matChanger() {
+  bokehPass.uniforms["focus"].value = effectController.focus;
+  bokehPass.uniforms["aperture"].value = effectController.aperture * 0.0001;
 }
 
+function setFocus() {
+  effectController.focus = dem.position.z;
+  dem.position.z = document.getElementById("FocusInput").value;
+  matChanger();
+}
+
+function setApeture() {
+  effectController.aperture = document.getElementById("ApetureInput").value;
+  effectController.aperture = document.getElementById("Apetureamount").value;
+  document.getElementById("ApetureInput").value =
+    document.getElementById("Apetureamount").value;
+  matChanger();
+}
 function setCameraX() {
   mainCamera.position.x = document.getElementById("CameraXInput").value;
 }
@@ -350,7 +395,11 @@ function render() {
   requestAnimationFrame(render);
   Resize();
   document.getElementById("FocusInput").addEventListener("input", setFocus);
-  document.getElementById("Focusamount").addEventListener("change", setFocus);
+  document.getElementById("FocusInput").addEventListener("change", setFocus);
+  document.getElementById("ApetureInput").addEventListener("input", setApeture);
+  document
+    .getElementById("ApetureInput")
+    .addEventListener("change", setApeture);
   document.getElementById("CameraXInput").addEventListener("input", setCameraX);
   document.getElementById("CameraYInput").addEventListener("input", setCameraY);
   document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
@@ -391,6 +440,7 @@ function render() {
   document.getElementById("FOVAmount").value = mainCamera.fov;
   mainCamera.updateProjectionMatrix();
   renderer.render(scene, mainCamera);
+  composer.render(0.1);
 
   if (document.querySelector("#DebugView").checked) {
     axesHelper.visible = true;
