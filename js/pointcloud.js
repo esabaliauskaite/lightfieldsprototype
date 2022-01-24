@@ -26,6 +26,7 @@ scene.add(light);
 
 let city = "./data/pcd/ciudadortogonal.26.pcd";
 let forest = "./data/pcd/Forest.pcd";
+let debug = "./data/debug_scene/debug_scene.pcd";
 
 const loader = new PCDLoader();
 
@@ -35,7 +36,7 @@ function renderPointCloud1() {
   document.getElementById("PC2").classList.remove("clicked");
   document.getElementById("PC1").classList.add("clicked");
   loader.load(
-    city,
+    debug,
     function (mesh) {
       document.getElementById("canvas").style.display = "block";
       document.getElementById("loader").style.display = "none";
