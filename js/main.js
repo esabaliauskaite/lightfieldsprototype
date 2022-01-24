@@ -312,7 +312,7 @@ function init() {
 
   bokehPass = new BokehPass(scene, mainCamera, {
     focus: 1.0,
-    aperture: 0.015,
+    aperture: 0,
     maxblur: 0.005,
 
     width: window.innerWidth,
@@ -339,7 +339,7 @@ function Resize() {
 
 const effectController = {
   focus: -4.0,
-  aperture: 5,
+  aperture: 0,
 };
 
 function matChanger() {
@@ -350,26 +350,47 @@ function matChanger() {
 function setFocus() {
   effectController.focus = dem.position.z;
   dem.position.z = document.getElementById("FocusInput").value;
-  document.getElementById("FocusInput").value =
-    document.getElementById("Focusamount").value;
+  document
+    .getElementById("FocusInput")
+    .style.setProperty("--value", dem.position.z);
+  document.getElementById("Focusamount").value =
+    document.getElementById("FocusInput").value;
   matChanger();
 }
 
 function setApeture() {
   effectController.aperture = document.getElementById("ApetureInput").value;
   effectController.aperture = document.getElementById("Apetureamount").value;
-  document.getElementById("ApetureInput").value =
-    document.getElementById("Apetureamount").value;
+  document
+    .getElementById("ApetureInput")
+    .style.setProperty("--value", effectController.aperture);
+  document.getElementById("Apetureamount").value =
+    document.getElementById("ApetureInput").value;
   matChanger();
 }
 function setCameraX() {
   mainCamera.position.x = document.getElementById("CameraXInput").value;
+  document
+    .getElementById("CameraXInput")
+    .style.setProperty("--value", mainCamera.position.x);
+  document.getElementById("CameraXamount").value =
+    document.getElementById("CameraXInput").value;
 }
 function setCameraY() {
   mainCamera.position.y = document.getElementById("CameraYInput").value;
+  document
+    .getElementById("CameraYInput")
+    .style.setProperty("--value", mainCamera.position.y);
+  document.getElementById("CameraYamount").value =
+    document.getElementById("CameraYInput").value;
 }
 function setCameraZ() {
   mainCamera.position.z = document.getElementById("CameraZInput").value;
+  document
+    .getElementById("CameraZInput")
+    .style.setProperty("--value", mainCamera.position.z);
+  document.getElementById("CameraZamount").value =
+    document.getElementById("CameraZInput").value;
 }
 
 function renderLightField1() {
@@ -382,18 +403,51 @@ function renderLightField2() {
   document.getElementById("PC1").classList.remove("clicked");
 }
 
+function onAni() {
+  if (document.getElementById("Ani").checked == true) {
+    let id = null;
+    const elem = document.getElementById("FocusInput");
+    let pos = document.getElementById("FocusInput").value;
+    clearInterval(id);
+    id = setInterval(frame, 120);
+    function frame() {
+      if (pos == -15) {
+        clearInterval(id);
+      } else {
+        pos--;
+        elem.value = pos;
+        pos = document.getElementById("FocusInput").value;
+        document.getElementById("FocusInput").style.setProperty("--value", pos);
+        document.getElementById("Focusamount").value =
+          document.getElementById("FocusInput").value;
+        setFocus();
+      }
+    }
+  }
+}
+
 function render() {
   requestAnimationFrame(render);
   Resize();
+  document.getElementById("animationCheck").addEventListener("change", onAni);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
-  document.getElementById("FocusInput").addEventListener("change", setFocus);
+  document.getElementById("Focusamount").addEventListener("change", setFocus);
   document.getElementById("ApetureInput").addEventListener("input", setApeture);
   document
-    .getElementById("ApetureInput")
+    .getElementById("Apetureamount")
     .addEventListener("change", setApeture);
   document.getElementById("CameraXInput").addEventListener("input", setCameraX);
   document.getElementById("CameraYInput").addEventListener("input", setCameraY);
   document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
+  document
+    .getElementById("CameraXamount")
+    .addEventListener("change", setCameraX);
+  document
+    .getElementById("CameraYamount")
+    .addEventListener("change", setCameraY);
+  document
+    .getElementById("CameraZamount")
+    .addEventListener("change", setCameraZ);
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
   document

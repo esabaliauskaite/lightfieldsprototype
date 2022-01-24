@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/toggle.css" />
     <link rel="stylesheet" href="css/slider.css" />
     <link rel="stylesheet" href="css/checkbox.css" />
+    <script src="js/main.js" type="module"></script>
   </head>
   <body>
     <div id="gui_container"></div>
@@ -189,17 +190,36 @@
               <span class="checkmark"></span>
             </label>
           </div>
+
+          <div class="optional" id="animationCheck">
+            <label for="Ani" id="animation" class="labels title"
+              >ANIMATION
+              <input
+                type="checkbox"
+                id="Ani"
+                name="Ani"
+                value="Ani"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+
         </div>
       </div>
       <div class="buttons">
-        <div id="PC1" class="button"><a class="buttonText">Light Field 1</a></div>
+        <div id="PC1" class="button"><a class="buttonText">Placeholder 1</a></div>
         <br />
-        <div id="PC2" class="button"><a class="buttonText">Light Field 2</a></div>
+        <div id="PC2" class="button"><a class="buttonText">Placeholder 2</a></div>
       </div>
     </div>
     </div>
-    <script src="js/main.js" type="module"></script>
     <script>
+      function updateVal(input, amount){
+        let pos = document.getElementById(input).value;
+        document.getElementById(input).style.setProperty('--value', pos);
+              document.getElementById(amount).value = document.getElementById(input).value;
+      }
+
       function checkNavigation() {
         if (document.getElementById("nav").checked == true) {
           window.location.href = "pointcloud.html";
