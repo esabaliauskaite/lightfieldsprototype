@@ -15,11 +15,17 @@ import { BokehPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/po
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
 const poseURL = "./data/debug_scene/blender_poses.json";
-const demURL = "./data/zero_plane.obj";
 const singleImageFov = 60; // degrees
+
+// # Forest Scene ##
+const ForestimgURL = "./data/Forest/";
+const ForestposeURL = "./data/Forest/forest_poses.json";
+const ForestsingleImageFov = 35; // degrees
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
+
+const demURL = "./data/zero_plane.obj";
 
 const views = {
   main: {
@@ -50,6 +56,7 @@ const debugView = views.debug;
 let scene, renderer, dem;
 let singleImages = new Array();
 let singleImageMaterials = new Array();
+let ForestsingleImageMaterials = new Array();
 let cameraArrayHelper = new Array();
 
 let sceneGeometries = [];
@@ -122,7 +129,80 @@ fetchPosesJSON(poseURL).then((poses) => {
     );
   }
   const positions = new Array();
-  const debugTable = [["image", "x", "y", "z", "rotX", "rotY", "rotZ"]];
+  for (const pose of poses.images) {
+    const useLegacy = !(
+      pose.hasOwnProperty("location") && pose.hasOwnProperty("rotation")
+    );
+    let pos = new THREE.Vector3();
+    let quat = new THREE.Quaternion();
+    let scale = new THREE.Vector3();
+
+    if (useLegacy) {
+      const M = pose.M3x4;
+      let matrix = new THREE.Matrix4();
+      matrix.set(
+        M[0][0],
+        M[0][1],
+        M[0][2],
+        M[0][3],
+        M[1][0],
+        M[1][1],
+        M[1][2],
+        M[1][3],
+        M[2][0],
+        M[2][1],
+        M[2][2],
+        M[2][3],
+        0,
+        0,
+        0,
+        1
+      );
+      matrix.decompose(pos, quat, scale);
+      pos.x = -pos.x;
+    } else {
+      pos.fromArray(pose.location);
+      quat.x = pose.rotation[0];
+      quat.y = pose.rotation[1];
+      quat.z = pose.rotation[2];
+      quat.w = pose.rotation[3];
+    }
+    positions.push(pos);
+
+    const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
+    camera.position.copy(pos);
+    camera.applyQuaternion(quat);
+
+    let url = imgURL + pose.imagefile;
+    url = url.replace(".tiff", ".png");
+    const tex = textureLoader.load(url);
+    const singleImageMaterial = createProjectiveMaterial(camera, tex);
+    singleImageMaterials.push(singleImageMaterial);
+    if (dem) {
+      dem.material = singleImageMaterial;
+    }
+    const helper = new cameraHelperArray(camera);
+    scene.add(helper);
+    helper.visible = false;
+    cameraArrayHelper.push(helper);
+    singleImages.push(camera);
+    scene.add(camera);
+  }
+});
+
+async function fetchPosesJSON1(url) {
+  const response = await fetch(url);
+  const poses = await response.json();
+  return poses;
+}
+
+fetchPosesJSON1(ForestposeURL).then((poses) => {
+  if (!("images" in poses)) {
+    console.log(
+      `An error happened when loading JSON poses. Property images is not present.`
+    );
+  }
+  const positions = new Array();
   for (const pose of poses.images) {
     const useLegacy = !(
       pose.hasOwnProperty("location") && pose.hasOwnProperty("rotation")
@@ -162,31 +242,24 @@ fetchPosesJSON(poseURL).then((poses) => {
       quat.w = pose.rotation[3];
     }
 
-    {
-      const euler = new THREE.Euler().setFromQuaternion(quat, "ZYX");
-      debugTable.push([
-        pose.imagefile,
-        Math.round(pos.x * 100) / 100,
-        Math.round(pos.y * 100) / 100,
-        Math.round(pos.z * 100) / 100,
-        Math.round(THREE.MathUtils.radToDeg(euler.x)),
-        Math.round(THREE.MathUtils.radToDeg(euler.y)),
-        Math.round(THREE.MathUtils.radToDeg(euler.z)),
-      ]);
-    }
     positions.push(pos);
 
-    const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
+    const camera = new THREE.PerspectiveCamera(
+      ForestsingleImageFov,
+      1.0,
+      0.5,
+      10000
+    );
     camera.position.copy(pos);
     camera.applyQuaternion(quat);
 
-    let url = imgURL + pose.imagefile;
+    let url = ForestimgURL + pose.imagefile;
     url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
-    const singleImageMaterial = createProjectiveMaterial(camera, tex);
-    singleImageMaterials.push(singleImageMaterial);
+    const ForestsingleImageMaterial = createProjectiveMaterial(camera, tex);
+    ForestsingleImageMaterials.push(ForestsingleImageMaterial);
     if (dem) {
-      dem.material = singleImageMaterial;
+      dem.material = ForestsingleImageMaterial;
     }
     const helper = new cameraHelperArray(camera);
     scene.add(helper);
@@ -460,8 +533,9 @@ function render() {
   renderer.clear();
 
   const cam = views.main.camera;
-  for (let i = 0; i < singleImageMaterials.length; i++) {
-    dem.material = singleImageMaterials[i];
+  cam.fov = ForestsingleImageFov;
+  for (let i = 0; i < ForestsingleImageMaterials.length; i++) {
+    dem.material = ForestsingleImageMaterials[i];
     renderer.render(rtScene, cam);
   }
 
