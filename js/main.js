@@ -399,6 +399,8 @@ function init() {
 
   document.getElementById("Apetureamount").value =
     bokehPass.uniforms["aperture"].value;
+
+  document.getElementById("PC1").classList.add("clicked");
 }
 
 function Resize() {
@@ -532,13 +534,23 @@ function render() {
   renderer.setClearColor(new THREE.Color(0), 0);
   renderer.clear();
 
-  const cam = views.main.camera;
-  cam.fov = ForestsingleImageFov;
-  for (let i = 0; i < ForestsingleImageMaterials.length; i++) {
-    dem.material = ForestsingleImageMaterials[i];
-    renderer.render(rtScene, cam);
+  if (document.querySelector("#PC1").classList.contains("clicked")) {
+    const cam = views.main.camera;
+    cam.fov = ForestsingleImageFov;
+    for (let i = 0; i < ForestsingleImageMaterials.length; i++) {
+      dem.material = ForestsingleImageMaterials[i];
+      renderer.render(rtScene, cam);
+    }
   }
 
+  if (document.querySelector("#PC2").classList.contains("clicked")) {
+    const cam = views.main.camera;
+    cam.fov = singleImageFov;
+    for (let i = 0; i < singleImageMaterials.length; i++) {
+      dem.material = singleImageMaterials[i];
+      renderer.render(rtScene, cam);
+    }
+  }
   renderer.setRenderTarget(null);
 
   const left = Math.floor(windowWidth * mainView.left);

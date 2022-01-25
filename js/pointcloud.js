@@ -36,7 +36,7 @@ function renderPointCloud1() {
   document.getElementById("PC2").classList.remove("clicked");
   document.getElementById("PC1").classList.add("clicked");
   loader.load(
-    debug,
+    forest,
     function (mesh) {
       document.getElementById("canvas").style.display = "block";
       document.getElementById("loader").style.display = "none";
@@ -59,7 +59,7 @@ function renderPointCloud2() {
   document.getElementById("PC2").classList.add("clicked");
   document.getElementById("PC1").classList.remove("clicked");
   loader.load(
-    forest,
+    debug,
     function (mesh) {
       document.getElementById("canvas").style.display = "block";
       document.getElementById("loader").style.display = "none";
