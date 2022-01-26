@@ -10,7 +10,12 @@ varying vec3 viewZ;
 void main() {
     vec4 texc = projMatrix * cameraMatrix * vWorldPos;
     vec2 uv = texc.xy / texc.w / 2.0 + 0.5;
-    gl_FragColor = vec4(texture(myTexture, uv).rgb, 1.0);
+
+    if (uv.x < 1.0 && uv.x > 0.0 && uv.y < 1.0 && uv.y > 0.0) {
+        gl_FragColor = vec4(texture(myTexture, uv).rgb, 1.0);
+    } else {
+        gl_FragColor = vec4(0.0);
+    }
 }
 `;
 export default fragment;
