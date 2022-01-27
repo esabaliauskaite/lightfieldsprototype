@@ -24,7 +24,7 @@ const ForestsingleImageFov = 35; // degrees
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
-
+let quat = new THREE.Quaternion();
 const demURL = "./data/zero_plane.obj";
 
 const views = {
@@ -58,6 +58,7 @@ let singleImages = new Array();
 let singleImageMaterials = new Array();
 let ForestsingleImageMaterials = new Array();
 let cameraArrayHelper = new Array();
+let ForestcameraArrayHelper = new Array();
 
 let sceneGeometries = [];
 let rtTarget;
@@ -173,6 +174,15 @@ fetchPosesJSON(poseURL).then((poses) => {
     camera.position.copy(pos);
     camera.applyQuaternion(quat);
 
+    /*     document.getElementById("CameraOrrientationX").value =
+      pose.rotation[0].toFixed(4);
+    quat.y = document.getElementById("CameraOrrientationY").value =
+      pose.rotation[1].toFixed(4);
+    quat.z = document.getElementById("CameraOrrientationZ").value =
+      pose.rotation[2].toFixed(4);
+    quat.w = document.getElementById("CameraOrrientationW").value =
+      pose.rotation[3].toFixed(4); */
+
     let url = imgURL + pose.imagefile;
     url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
@@ -208,7 +218,6 @@ fetchPosesJSON1(ForestposeURL).then((poses) => {
       pose.hasOwnProperty("location") && pose.hasOwnProperty("rotation")
     );
     let pos = new THREE.Vector3();
-    let quat = new THREE.Quaternion();
     let scale = new THREE.Vector3();
 
     if (useLegacy) {
@@ -253,6 +262,15 @@ fetchPosesJSON1(ForestposeURL).then((poses) => {
     camera.position.copy(pos);
     camera.applyQuaternion(quat);
 
+    /*     document.getElementById("CameraOrrientationX").value =
+      pose.rotation[0].toFixed(4);
+    quat.y = document.getElementById("CameraOrrientationY").value =
+      pose.rotation[1].toFixed(4);
+    quat.z = document.getElementById("CameraOrrientationZ").value =
+      pose.rotation[2].toFixed(4);
+    quat.w = document.getElementById("CameraOrrientationW").value =
+      pose.rotation[3].toFixed(4); */
+
     let url = ForestimgURL + pose.imagefile;
     url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
@@ -264,7 +282,7 @@ fetchPosesJSON1(ForestposeURL).then((poses) => {
     const helper = new cameraHelperArray(camera);
     scene.add(helper);
     helper.visible = false;
-    cameraArrayHelper.push(helper);
+    ForestcameraArrayHelper.push(helper);
     singleImages.push(camera);
     scene.add(camera);
   }
@@ -294,12 +312,24 @@ loader.load(
 
 function showCameraArray() {
   if (document.getElementById("CameraArray").checked) {
-    for (let i = 0; i < cameraArrayHelper.length; i++) {
-      cameraArrayHelper[i].visible = true;
+    if (document.querySelector("#PC2").classList.contains("clicked")) {
+      for (let i = 0; i < cameraArrayHelper.length; i++) {
+        cameraArrayHelper[i].visible = true;
+      }
+    } else {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+        ForestcameraArrayHelper[i].visible = true;
+      }
     }
   } else {
-    for (let i = 0; i < cameraArrayHelper.length; i++) {
-      cameraArrayHelper[i].visible = false;
+    if (document.querySelector("#PC2").classList.contains("clicked")) {
+      for (let i = 0; i < cameraArrayHelper.length; i++) {
+        cameraArrayHelper[i].visible = false;
+      }
+    } else {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+        ForestcameraArrayHelper[i].visible = false;
+      }
     }
   }
 }
@@ -443,24 +473,43 @@ function setApeture() {
     document.getElementById("ApetureInput").value;
   matChanger();
 }
-function setCameraX() {
+
+function setCamera() {
   mainCamera.position.x = document.getElementById("CameraXInput").value;
   document
     .getElementById("CameraXInput")
     .style.setProperty("--value", mainCamera.position.x);
   document.getElementById("CameraXamount").value =
     document.getElementById("CameraXInput").value;
-}
-function setCameraY() {
+
   mainCamera.position.y = document.getElementById("CameraYInput").value;
   document
     .getElementById("CameraYInput")
     .style.setProperty("--value", mainCamera.position.y);
   document.getElementById("CameraYamount").value =
     document.getElementById("CameraYInput").value;
-}
-function setCameraZ() {
+
   mainCamera.position.z = document.getElementById("CameraZInput").value;
+  document
+    .getElementById("CameraZInput")
+    .style.setProperty("--value", mainCamera.position.z);
+}
+function cameraPos() {
+  document.getElementById("CameraXInput").value = mainCamera.position.x;
+  document
+    .getElementById("CameraXInput")
+    .style.setProperty("--value", mainCamera.position.x);
+  document.getElementById("CameraXamount").value =
+    document.getElementById("CameraXInput").value;
+
+  document.getElementById("CameraYInput").value = mainCamera.position.y;
+  document
+    .getElementById("CameraYInput")
+    .style.setProperty("--value", mainCamera.position.y);
+  document.getElementById("CameraYamount").value =
+    document.getElementById("CameraYInput").value;
+
+  document.getElementById("CameraZInput").value = mainCamera.position.z;
   document
     .getElementById("CameraZInput")
     .style.setProperty("--value", mainCamera.position.z);
@@ -479,50 +528,56 @@ function renderLightField2() {
 }
 
 function onAni() {
-  if (document.getElementById("Ani").checked == true) {
-    let id = null;
-    const elem = document.getElementById("FocusInput");
-    let pos = document.getElementById("FocusInput").value;
-    clearInterval(id);
-    id = setInterval(frame, 120);
-    function frame() {
-      if (pos == -15) {
-        clearInterval(id);
-      } else {
-        pos--;
-        elem.value = pos;
-        pos = document.getElementById("FocusInput").value;
-        document.getElementById("FocusInput").style.setProperty("--value", pos);
-        document.getElementById("Focusamount").value =
-          document.getElementById("FocusInput").value;
-        setFocus();
-      }
+  let id = null;
+  const elem = document.getElementById("FocusInput");
+  let pos = document.getElementById("FocusInput").value;
+  clearInterval(id);
+  id = setInterval(frame, 120);
+  function frame() {
+    if (pos == -15) {
+      clearInterval(id);
+    } else {
+      pos--;
+      elem.value = pos;
+      pos = document.getElementById("FocusInput").value;
+      document.getElementById("FocusInput").style.setProperty("--value", pos);
+      document.getElementById("Focusamount").value =
+        document.getElementById("FocusInput").value;
+      setFocus();
     }
   }
+}
+
+function setOrrientation() {
+  document.getElementById("CameraOrrientationX").value = mainView.up[0];
+  document.getElementById("CameraOrrientationY").value = mainView.up[1];
+  document.getElementById("CameraOrrientationZ").value = mainView.up[2];
 }
 
 function render() {
   requestAnimationFrame(render);
   Resize();
-  document.getElementById("animationCheck").addEventListener("change", onAni);
+  cameraPos();
+  setOrrientation();
+  document.getElementById("Ani").addEventListener("click", onAni);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
   document.getElementById("ApetureInput").addEventListener("input", setApeture);
   document
     .getElementById("Apetureamount")
     .addEventListener("change", setApeture);
-  document.getElementById("CameraXInput").addEventListener("input", setCameraX);
-  document.getElementById("CameraYInput").addEventListener("input", setCameraY);
-  document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
+  document.getElementById("CameraXInput").addEventListener("input", setCamera);
+  document.getElementById("CameraYInput").addEventListener("input", setCamera);
+  document.getElementById("CameraZInput").addEventListener("input", setCamera);
   document
     .getElementById("CameraXamount")
-    .addEventListener("change", setCameraX);
+    .addEventListener("change", setCamera);
   document
     .getElementById("CameraYamount")
-    .addEventListener("change", setCameraY);
+    .addEventListener("change", setCamera);
   document
     .getElementById("CameraZamount")
-    .addEventListener("change", setCameraZ);
+    .addEventListener("change", setCamera);
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
   document

@@ -38,47 +38,40 @@
           </div>
 
           <div class="block">
-            <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA</p>
+            <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA POSITION</p>
+            
+            
             <div class="slider">
               <p class="text">X</p>
               <input
                 id="CameraXInput"
                 type="range"
-                min="-20"
-                max="20"
+                min="-200"
+                max="200"
                 step="0.1"
-                value="0"
                 class="CameraSlidersSize styled-slider-cameraX slider-progress"
-                oninput="CameraXamount.value=CameraXInput.value"
               />
               <input
                 id="CameraXamount"
-                type="number"
-                min="-20"
-                max="20"
                 class="TextInput"
-                oninput="CameraXInput.value=CameraXamount.value"
               />
             </div>
+
+
             <div class="slider">
               <p class="text">Y</p>
               <input
                 id="CameraYInput"
                 type="range"
-                min="-20"
-                max="20"
+                min="-200"
+                max="200"
                 step="0.1"
-                value="0"
                 class="CameraSlidersSize styled-slider-cameraY slider-progress"
                 oninput="CameraYamount.value=CameraYInput.value"
               />
               <input
                 id="CameraYamount"
-                type="number"
-                min="-20"
-                max="20"
                 class="TextInput"
-                oninput="CameraYInput.value=CameraYamount.value"
               />
             </div>
             <div class="slider">
@@ -86,23 +79,38 @@
               <input
                 id="CameraZInput"
                 type="range"
-                min="-20"
-                max="20"
+                min="-200"
+                max="200"
                 step="0.1"
-                value="4"
                 class="CameraSlidersSize styled-slider-cameraZ slider-progress"
-                oninput="CameraZamount.value=CameraZInput.value"
               />
               <input
                 id="CameraZamount"
-                type="number"
-                min="-20"
-                max="20"
                 class="TextInput"
-                oninput="CameraZInput.value=CameraZamount.value"
               />
             </div>
           </div>
+          <div class="block">
+          <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA ORRIENTATION</p>
+          <div class="slider">
+            <div>
+            <p class="text">X</p>
+            <input
+            id="CameraOrrientationX"
+            class="TextInput"
+          /></div><div>
+          <p class="text">Y</p>
+          <input
+          id="CameraOrrientationY"
+          class="TextInput"
+        /></div> <div>
+        <p class="text">Z</p>
+        <input
+        id="CameraOrrientationZ"
+        class="TextInput"
+      /></div>
+            </div>
+            </div>
 
           <div class="block">
             <p class="title"><img src="svg/focus.svg" alt="close" class="functionalities">FOCUS</p>
@@ -190,26 +198,14 @@
               <span class="checkmark"></span>
             </label>
           </div>
-
-          <div class="optional" id="animationCheck">
-            <label for="Ani" id="animation" class="labels title"
-              >ANIMATION
-              <input
-                type="checkbox"
-                id="Ani"
-                name="Ani"
-                value="Ani"
-              />
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
         </div>
       </div>
       <div class="buttons">
         <div id="PC1" class="button"><a class="buttonText">FOREST</a></div>
         <br />
-        <div id="PC2" class="button"><a class="buttonText">DEBUG</a></div>
+        <div id="PC2" class="button"><a class="buttonText">DEBUG</a></div>        
+        <br />
+        <div  id="Ani" class="button"><a class="buttonText">ANIMATION</a></div>
       </div>
     </div>
     </div>
