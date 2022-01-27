@@ -18,6 +18,7 @@ body {
   z-index: 1;
   top: 0%;
   right: 0%;
+  display: none;
 }
 
 p {
@@ -218,6 +219,20 @@ div .slider {
   z-index: 1;
   top: 2%;
   right: 2%;
+}
+
+.menubtn {
+  display: flex;
+  align-items: center;
+}
+
+.anibtn {
+  position: fixed;
+  z-index: 1;
+  top: 10%;
+  right: 2%;
+  width: 210px;
+  height: 50px;
 }
 
 .instructions {

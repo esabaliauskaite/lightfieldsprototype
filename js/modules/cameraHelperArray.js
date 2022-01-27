@@ -95,7 +95,6 @@ class cameraHelperArray extends LineSegments {
     this.camera = camera;
     if (this.camera.updateProjectionMatrix)
       this.camera.updateProjectionMatrix();
-
     this.matrix = camera.matrixWorld;
     this.matrixAutoUpdate = false;
 

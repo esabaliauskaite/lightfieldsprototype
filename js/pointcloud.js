@@ -25,8 +25,8 @@ const light = new THREE.AmbientLight(0x404040);
 scene.add(light);
 
 let city = "./data/pcd/ciudadortogonal.26.pcd";
-let forest = "./data/pcd/Forest.pcd";
-let debug = "./data/debug_scene/debug_scene.pcd";
+let forest = "./data/pcd/PlaneForest1.pcd";
+let debug = "./data/pcd/debug_scene.pcd";
 
 const loader = new PCDLoader();
 

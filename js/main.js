@@ -316,9 +316,15 @@ function showCameraArray() {
       for (let i = 0; i < cameraArrayHelper.length; i++) {
         cameraArrayHelper[i].visible = true;
       }
-    } else {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+        ForestcameraArrayHelper[i].visible = false;
+      }
+    } else if (document.querySelector("#PC1").classList.contains("clicked")) {
       for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = true;
+      }
+      for (let i = 0; i < cameraArrayHelper.length; i++) {
+        cameraArrayHelper[i].visible = false;
       }
     }
   } else {
@@ -583,7 +589,7 @@ function render() {
   document
     .getElementById("CameraArray")
     .addEventListener("change", showCameraArray);
-
+  showCameraArray();
   renderer.autoClear = false;
   renderer.setRenderTarget(rtTarget);
   renderer.setClearColor(new THREE.Color(0), 0);

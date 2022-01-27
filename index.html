@@ -21,10 +21,13 @@
         </span>
         <span> <div class="PCToggleText">Point Cloud</div></span>
       </div>
+      <div class="menubtn">
       <div class="controlsbtn button">
-        <img src="svg/controls.svg" alt="close" class="icons">
-          <span class="controls" onclick="onClick()">CONTROLS</span>
-        </div>
+          <span class="buttonText" onclick="onClick()">CONTROLS</span>
+      </div>
+
+      <div  id="Ani" class="anibtn button"><a class="buttonText">ANIMATE</a></div>
+    </div>
       <div class="GUI">
         <div class="closeicon">
         <img src="svg/close.svg" alt="close" class="icons close" onclick="onClick()">
@@ -91,19 +94,19 @@
             </div>
           </div>
           <div class="block">
-          <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA ORRIENTATION</p>
+          <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA ORIENTATION</p>
           <div class="slider">
-            <div>
+            <div class="slider">
             <p class="text">X</p>
             <input
             id="CameraOrrientationX"
             class="TextInput"
-          /></div><div>
+          /></div><div class="slider">
           <p class="text">Y</p>
           <input
           id="CameraOrrientationY"
           class="TextInput"
-        /></div> <div>
+        /></div> <div class="slider">
         <p class="text">Z</p>
         <input
         id="CameraOrrientationZ"
@@ -205,7 +208,6 @@
         <br />
         <div id="PC2" class="button"><a class="buttonText">DEBUG</a></div>        
         <br />
-        <div  id="Ani" class="button"><a class="buttonText">ANIMATION</a></div>
       </div>
     </div>
     </div>
