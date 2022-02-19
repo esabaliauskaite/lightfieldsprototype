@@ -8,9 +8,6 @@ import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
 
-import { EffectComposer } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/RenderPass";
-import { BokehPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/BokehPass";
 import { PCDLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PCDLoader.js";
 
 // # Debug Scene ##
@@ -69,8 +66,6 @@ let mainCamera, debugCamera;
 let axesHelper, cameraHelper;
 
 let windowWidth, windowHeight;
-
-let renderPass, bokehPass, composer;
 
 const textureLoader = new THREE.TextureLoader();
 const loader = new OBJLoader();
@@ -423,25 +418,6 @@ function init() {
   scene.add(quad);
   document.body.appendChild(renderer.domElement);
 
-  renderPass = new RenderPass(scene, mainCamera);
-
-  bokehPass = new BokehPass(scene, mainCamera, {
-    focus: 1.0,
-    aperture: 0,
-    maxblur: 0.005,
-
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  composer = new EffectComposer(renderer);
-
-  composer.addPass(renderPass);
-  composer.addPass(bokehPass);
-
-  document.getElementById("Apetureamount").value =
-    bokehPass.uniforms["aperture"].value;
-
   document.getElementById("PC1").classList.add("clicked");
 }
 
@@ -454,36 +430,13 @@ function Resize() {
   }
 }
 
-const effectController = {
-  focus: -4.0,
-  aperture: 0,
-};
-
-function matChanger() {
-  bokehPass.uniforms["focus"].value = effectController.focus;
-  bokehPass.uniforms["aperture"].value = effectController.aperture * 0.0001;
-}
-
 function setFocus() {
-  effectController.focus = dem.position.z;
   dem.position.z = document.getElementById("FocusInput").value;
   document
     .getElementById("FocusInput")
     .style.setProperty("--value", dem.position.z);
   document.getElementById("Focusamount").value =
     document.getElementById("FocusInput").value;
-  matChanger();
-}
-
-function setApeture() {
-  effectController.aperture = document.getElementById("ApetureInput").value;
-  effectController.aperture = document.getElementById("Apetureamount").value;
-  document
-    .getElementById("ApetureInput")
-    .style.setProperty("--value", effectController.aperture);
-  document.getElementById("Apetureamount").value =
-    document.getElementById("ApetureInput").value;
-  matChanger();
 }
 
 function setCamera() {
@@ -621,11 +574,6 @@ function render() {
 
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
-
-  document.getElementById("ApetureInput").addEventListener("input", setApeture);
-  document
-    .getElementById("Apetureamount")
-    .addEventListener("change", setApeture);
 
   document.getElementById("CameraXInput").addEventListener("input", setCamera);
   document.getElementById("CameraYInput").addEventListener("input", setCamera);
