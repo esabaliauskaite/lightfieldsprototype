@@ -11,6 +11,7 @@ import { cameraHelperArray } from "./modules/cameraHelperArray.js";
 import { EffectComposer } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/RenderPass";
 import { BokehPass } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/postprocessing/BokehPass";
+import { PCDLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PCDLoader.js";
 
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
@@ -34,7 +35,7 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 4],
+    eye: [0, 0, 20],
     up: [0, 1, 0],
     fov: 60,
   },
@@ -70,6 +71,14 @@ let axesHelper, cameraHelper;
 let windowWidth, windowHeight;
 
 let renderPass, bokehPass, composer;
+
+const textureLoader = new THREE.TextureLoader();
+const loader = new OBJLoader();
+
+let forest = "./data/pcd/PlaneForest1.pcd";
+let debug = "./data/pcd/debug_scene.pcd";
+
+const PCDloader = new PCDLoader();
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -288,9 +297,6 @@ fetchPosesJSON1(ForestposeURL).then((poses) => {
   }
 });
 
-const textureLoader = new THREE.TextureLoader();
-
-const loader = new OBJLoader();
 loader.load(
   demURL,
   function (object) {
@@ -500,27 +506,31 @@ function setCamera() {
     .getElementById("CameraZInput")
     .style.setProperty("--value", mainCamera.position.z);
 }
-function cameraPos() {
-  document.getElementById("CameraXInput").value = mainCamera.position.x;
-  document
-    .getElementById("CameraXInput")
-    .style.setProperty("--value", mainCamera.position.x);
-  document.getElementById("CameraXamount").value =
-    document.getElementById("CameraXInput").value;
 
-  document.getElementById("CameraYInput").value = mainCamera.position.y;
-  document
-    .getElementById("CameraYInput")
-    .style.setProperty("--value", mainCamera.position.y);
-  document.getElementById("CameraYamount").value =
-    document.getElementById("CameraYInput").value;
+function cameraPos(e) {
+  if (e.button === 0 || e.button === 1 || e.button === 2) {
+    document.getElementById("CameraXInput").value = mainCamera.position.x;
+    document
+      .getElementById("CameraXInput")
+      .style.setProperty("--value", mainCamera.position.x);
+    document.getElementById("CameraXamount").value =
+      document.getElementById("CameraXInput").value;
 
-  document.getElementById("CameraZInput").value = mainCamera.position.z;
-  document
-    .getElementById("CameraZInput")
-    .style.setProperty("--value", mainCamera.position.z);
-  document.getElementById("CameraZamount").value =
-    document.getElementById("CameraZInput").value;
+    document.getElementById("CameraYInput").value = mainCamera.position.y;
+    document
+      .getElementById("CameraYInput")
+      .style.setProperty("--value", mainCamera.position.y);
+    document.getElementById("CameraYamount").value =
+      document.getElementById("CameraYInput").value;
+
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document
+      .getElementById("CameraZInput")
+      .style.setProperty("--value", mainCamera.position.z);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
+  } else {
+  }
 }
 
 function renderLightField1() {
@@ -531,6 +541,46 @@ function renderLightField1() {
 function renderLightField2() {
   document.getElementById("PC2").classList.add("clicked");
   document.getElementById("PC1").classList.remove("clicked");
+}
+
+function renderPointCloud() {
+  if (document.getElementById("PC1").classList.contains("clicked")) {
+    PCDloader.load(
+      forest,
+      function (mesh) {
+        if (document.getElementById("PCView").checked == true) {
+          mesh.material.color.setHex(0xff7b00);
+          scene.add(mesh);
+        }
+        if (document.getElementById("PCView").checked == false) {
+          mesh.visible = false;
+        }
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.log("An error happened");
+      }
+    );
+  } else if (document.getElementById("PC2").classList.contains("clicked")) {
+    PCDloader.load(
+      debug,
+      function (mesh) {
+        mesh.material.color.setHex(0xa7c957);
+        scene.add(mesh);
+        if (document.getElementById("PCView").checked == false) {
+          mesh.visible = false;
+        }
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.log("An error happened");
+      }
+    );
+  }
 }
 
 function onAni() {
@@ -563,15 +613,20 @@ function setOrrientation() {
 function render() {
   requestAnimationFrame(render);
   Resize();
-  cameraPos();
   setOrrientation();
+
+  document.querySelector("canvas").addEventListener("mousedown", cameraPos);
+
   document.getElementById("Ani").addEventListener("click", onAni);
+
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
+
   document.getElementById("ApetureInput").addEventListener("input", setApeture);
   document
     .getElementById("Apetureamount")
     .addEventListener("change", setApeture);
+
   document.getElementById("CameraXInput").addEventListener("input", setCamera);
   document.getElementById("CameraYInput").addEventListener("input", setCamera);
   document.getElementById("CameraZInput").addEventListener("input", setCamera);
@@ -584,12 +639,17 @@ function render() {
   document
     .getElementById("CameraZamount")
     .addEventListener("change", setCamera);
+
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
+
   document
     .getElementById("CameraArray")
     .addEventListener("change", showCameraArray);
   showCameraArray();
+
+  document.getElementById("PCView").addEventListener("click", renderPointCloud);
+
   renderer.autoClear = false;
   renderer.setRenderTarget(rtTarget);
   renderer.setClearColor(new THREE.Color(0), 0);

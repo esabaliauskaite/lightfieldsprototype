@@ -4,46 +4,41 @@
     <meta charset="UTF-8" />
     <title>Airborne light field renderer</title>
     <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/toggle.css" />
     <link rel="stylesheet" href="css/slider.css" />
     <link rel="stylesheet" href="css/checkbox.css" />
     <script src="js/main.js" type="module"></script>
   </head>
   <body>
-    <div id="gui_container"></div>
     <div id="canvas">
-      <div class="Toggle">
-        <span><a href="/" class="LFToglleText">Light Field </a></span>
-        <span onchange="checkNavigation()">
-          <input type="checkbox" id="nav" /><label for="nav" id="toggle"
-            >Toggle</label
-          >
-        </span>
-        <span> <div class="PCToggleText">Point Cloud</div></span>
-      </div>
       <div class="menubtn">
-      <div class="controlsbtn button">
-          <span class="buttonText" onclick="onClick()">CONTROLS</span>
+        <div class="controlsbtn button" onclick="onClick()">
+          <span class="buttonText">CONTROLS</span>
+        </div>
+        <div id="Ani" class="anibtn button">
+          <a class="buttonText">ANIMATE</a>
+        </div>
+        <div class="insbtn button">
+          <a class="buttonText" onclick="onClickIns()">INSTRUCTIONS</a>
+        </div>
+        <div class="resetbtn button">
+          <a class="buttonText" onclick="reload()">RESET</a>
+        </div>
       </div>
-
-      <div  id="Ani" class="anibtn button"><a class="buttonText">ANIMATE</a></div>
-    </div>
       <div class="GUI">
-        <div class="closeicon">
-        <img src="svg/close.svg" alt="close" class="icons close" onclick="onClick()">
-          <span class="close">CLOSE</span></div>
+        <div class="closeicon" onclick="onClickClose()">
+          <img src="svg/close.svg" alt="close" class="icons close" />
+          <span class="close">CLOSE</span>
+        </div>
         <div class="menu">
           <div class="block">
-            <p class="title">INSTRUCTIONS</p>
-            <div class="optional"><img src="svg/rotate.svg" alt="close" class="instructions"><p class="text">Left mouse button to rotate</p></div>
-            <div class="optional"><img src="svg/dolly.svg" alt="close" class="instructions"><p class="text">Middle mouse button to dolly</p></div>
-            <div class="optional"><img src="svg/pan.svg" alt="close" class="instructions"><p class="text">Right mouse button to pan</p></div>
-          </div>
+            <p class="title">
+              <img
+                src="svg/camera.svg"
+                alt="close"
+                class="functionalities"
+              />CAMERA POSITION
+            </p>
 
-          <div class="block">
-            <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA POSITION</p>
-            
-            
             <div class="slider">
               <p class="text">X</p>
               <input
@@ -53,13 +48,14 @@
                 max="200"
                 step="0.1"
                 class="CameraSlidersSize styled-slider-cameraX slider-progress"
+                oninput="CameraXamount.value=CameraXInput.value"
               />
               <input
                 id="CameraXamount"
                 class="TextInput"
+                oninput="CameraXInput.value=CameraXamount.value"
               />
             </div>
-
 
             <div class="slider">
               <p class="text">Y</p>
@@ -75,6 +71,7 @@
               <input
                 id="CameraYamount"
                 class="TextInput"
+                oninput="CameraYInput.value=CameraYamount.value"
               />
             </div>
             <div class="slider">
@@ -85,38 +82,50 @@
                 min="-200"
                 max="200"
                 step="0.1"
+                value="20"
                 class="CameraSlidersSize styled-slider-cameraZ slider-progress"
+                oninput="CameraZamount.value=CameraZInput.value"
               />
               <input
                 id="CameraZamount"
                 class="TextInput"
+                oninput="CameraZInput.value=CameraZamount.value"
               />
             </div>
           </div>
-          <div class="block">
-          <p class="title"><img src="svg/camera.svg" alt="close" class="functionalities">CAMERA ORIENTATION</p>
-          <div class="slider">
-            <div class="slider">
-            <p class="text">X</p>
-            <input
-            id="CameraOrrientationX"
-            class="TextInput"
-          /></div><div class="slider">
-          <p class="text">Y</p>
-          <input
-          id="CameraOrrientationY"
-          class="TextInput"
-        /></div> <div class="slider">
-        <p class="text">Z</p>
-        <input
-        id="CameraOrrientationZ"
-        class="TextInput"
-      /></div>
-            </div>
-            </div>
 
           <div class="block">
-            <p class="title"><img src="svg/focus.svg" alt="close" class="functionalities">FOCUS</p>
+            <p class="title">
+              <img
+                src="svg/camera.svg"
+                alt="close"
+                class="functionalities"
+              />CAMERA ORIENTATION
+            </p>
+            <div class="slider">
+              <div class="slider">
+                <p class="text">X</p>
+                <input id="CameraOrrientationX" class="TextInput" />
+              </div>
+              <div class="slider">
+                <p class="text">Y</p>
+                <input id="CameraOrrientationY" class="TextInput" />
+              </div>
+              <div class="slider">
+                <p class="text">Z</p>
+                <input id="CameraOrrientationZ" class="TextInput" />
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <p class="title">
+              <img
+                src="svg/focus.svg"
+                alt="close"
+                class="functionalities"
+              />FOCUS
+            </p>
             <div class="slider">
               <input
                 id="FocusInput"
@@ -139,7 +148,13 @@
           </div>
 
           <div class="block">
-            <p class="title"><img src="svg/aperture.svg" alt="close" class="functionalities">APERTURE</p>
+            <p class="title">
+              <img
+                src="svg/aperture.svg"
+                alt="close"
+                class="functionalities"
+              />APERTURE
+            </p>
             <div class="slider">
               <input
                 id="ApetureInput"
@@ -162,7 +177,7 @@
           </div>
 
           <div class="FOV block">
-            <img src="svg/fov.svg" alt="close" class="functionalities">
+            <img src="svg/fov.svg" alt="close" class="functionalities" />
             <p class="title">FIELD OF VIEW</p>
             <div class="slider">
               <input
@@ -201,66 +216,115 @@
               <span class="checkmark"></span>
             </label>
           </div>
+
+          <div class="optional">
+            <label for="PCView" id="showPC" class="labels title"
+              >SHOW POINT CLOUD VIEW
+              <input type="checkbox" id="PCView" name="PCView" value="PCView" />
+              <span class="checkmark"></span>
+            </label>
+          </div>
         </div>
       </div>
       <div class="buttons">
         <div id="PC1" class="button"><a class="buttonText">FOREST</a></div>
         <br />
-        <div id="PC2" class="button"><a class="buttonText">DEBUG</a></div>        
+        <div id="PC2" class="button"><a class="buttonText">DEBUG</a></div>
         <br />
       </div>
-    </div>
+      <div class="GUIIns">
+        <div class="closeicon" onclick="onClickInsClose()">
+          <img src="svg/close.svg" alt="close" class="icons close" />
+          <span class="close">CLOSE</span>
+        </div>
+        <div class="block">
+          <p class="title">INSTRUCTIONS</p>
+          <div class="optional">
+            <img src="svg/rotate.svg" alt="close" class="instructions" />
+            <p class="text">Left mouse button to rotate</p>
+          </div>
+          <div class="optional">
+            <img src="svg/dolly.svg" alt="close" class="instructions" />
+            <p class="text">Middle mouse button to dolly</p>
+          </div>
+          <div class="optional">
+            <img src="svg/pan.svg" alt="close" class="instructions" />
+            <p class="text">Right mouse button to pan</p>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
-      function updateVal(input, amount){
+      function updateVal(input, amount) {
         let pos = document.getElementById(input).value;
-        document.getElementById(input).style.setProperty('--value', pos);
-              document.getElementById(amount).value = document.getElementById(input).value;
+        document.getElementById(input).style.setProperty("--value", pos);
+        document.getElementById(amount).value =
+          document.getElementById(input).value;
       }
 
-      function checkNavigation() {
-        if (document.getElementById("nav").checked == true) {
-          window.location.href = "pointcloud.html";
-        }
+      function reload() {
+        window.location.href = "/";
       }
+
       function onClick() {
         var GUI = document.querySelector(".GUI");
-        var button = document.querySelector(".controls");
-        if (GUI.style.display === "none") {
-          GUI.style.display = "block";
-          button.style.display = "none";
-        } else {
-          GUI.style.display = "none";
-          button.style.display = "block";
-        }
+        GUI.style.display = "block";
+      }
+      function onClickClose() {
+        var GUI = document.querySelector(".GUI");
+        GUI.style.display = "none";
+      }
+      function onClickIns() {
+        var GUI = document.querySelector(".GUIIns");
+        GUI.style.display = "block";
+      }
+      function onClickInsClose() {
+        var GUI = document.querySelector(".GUIIns");
+        GUI.style.display = "none";
       }
 
-      for (let e of document.querySelectorAll('input[type="range"].styled-slider')) {
-        e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '-100' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '100' : e.max);
-        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      for (let e of document.querySelectorAll(
+        'input[type="range"].styled-slider'
+      )) {
+        e.style.setProperty("--value", e.value);
+        e.style.setProperty("--min", e.min == "" ? "-100" : e.min);
+        e.style.setProperty("--max", e.max == "" ? "100" : e.max);
+        e.addEventListener("input", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
 
-      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraZ')) {
-        e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
-        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      for (let e of document.querySelectorAll(
+        'input[type="range"].styled-slider-cameraZ'
+      )) {
+        e.style.setProperty("--value", e.value);
+        e.style.setProperty("--min", e.min == "" ? "0" : e.min);
+        e.style.setProperty("--max", e.max == "" ? "10" : e.max);
+        e.addEventListener("input", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
 
-      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraY')) {
-        e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
-        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+      for (let e of document.querySelectorAll(
+        'input[type="range"].styled-slider-cameraY'
+      )) {
+        e.style.setProperty("--value", e.value);
+        e.style.setProperty("--min", e.min == "" ? "0" : e.min);
+        e.style.setProperty("--max", e.max == "" ? "10" : e.max);
+        e.addEventListener("input", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
-      
-      for (let e of document.querySelectorAll('input[type="range"].styled-slider-cameraX')) {
-        e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min == '' ? '0' : e.min);
-        e.style.setProperty('--max', e.max == '' ? '10' : e.max);
-        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+
+      for (let e of document.querySelectorAll(
+        'input[type="range"].styled-slider-cameraX'
+      )) {
+        e.style.setProperty("--value", e.value);
+        e.style.setProperty("--min", e.min == "" ? "0" : e.min);
+        e.style.setProperty("--max", e.max == "" ? "10" : e.max);
+        e.addEventListener("input", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
     </script>
   </body>
