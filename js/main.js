@@ -9,6 +9,7 @@ import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
 
 import { PCDLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PCDLoader.js";
+import { PLYLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PLYLoader.js";
 
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
@@ -16,8 +17,8 @@ const poseURL = "./data/debug_scene/blender_poses.json";
 const singleImageFov = 60; // degrees
 
 // # Forest Scene ##
-const ForestimgURL = "./data/Forest/";
-const ForestposeURL = "./data/Forest/forest_poses.json";
+const ForestimgURL = "./data/forest_F5/";
+const ForestposeURL = "./data/forest_F5/poses.json";
 const ForestsingleImageFov = 35; // degrees
 
 const bgColor = new THREE.Color(0x0f0f0f);
@@ -51,7 +52,8 @@ const views = {
 const mainView = views.main;
 const debugView = views.debug;
 
-let scene, renderer, dem;
+let scene, renderer, dem, demScene;
+let pointCloud = null;
 let singleImages = new Array();
 let singleImageMaterials = new Array();
 let ForestsingleImageMaterials = new Array();
@@ -70,10 +72,11 @@ let windowWidth, windowHeight;
 const textureLoader = new THREE.TextureLoader();
 const loader = new OBJLoader();
 
-let forest = "./data/pcd/PlaneForest1.pcd";
+let forest = "./data/forest_F5/F5.ply";
 let debug = "./data/pcd/debug_scene.pcd";
 
 const PCDloader = new PCDLoader();
+const plyLoader = new PLYLoader();
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -116,6 +119,22 @@ function createScreenMaterial(texture) {
     depthWrite: false,
     transparent: true,
     blending: THREE.NormalBlending,
+  });
+
+  return materialScreen;
+}
+
+function createViewMaterial(texture) {
+  const materialScreen = new THREE.ShaderMaterial({
+    uniforms: {
+      tDiffuse: { value: texture },
+    },
+    vertexShader: vertexScreen,
+    fragmentShader: fragmentScreen,
+    depthWrite: true,
+    transparent: true,
+    blending: THREE.NormalBlending,
+    side: THREE.DoubleSide,
   });
 
   return materialScreen;
@@ -172,6 +191,8 @@ fetchPosesJSON(poseURL).then((poses) => {
       quat.z = pose.rotation[2];
       quat.w = pose.rotation[3];
     }
+    pos.z = pos.z;
+
     positions.push(pos);
 
     const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
@@ -255,6 +276,7 @@ fetchPosesJSON1(ForestposeURL).then((poses) => {
       quat.w = pose.rotation[3];
     }
 
+    //pos.z = -pos.z;
     positions.push(pos);
 
     const camera = new THREE.PerspectiveCamera(
@@ -297,15 +319,21 @@ loader.load(
   function (object) {
     dem = object.children[0];
     dem.scale.fromArray([1, 1, -1]);
-    scene.add(dem);
+    //scene.add(dem);
     dem.position.z = -4;
     document.getElementById("Focusamount").value = dem.position.z;
     document.getElementById("FocusInput").value = dem.position.z;
     focus = dem.position.z;
     sceneGeometries.push(dem);
     rtScene.add(dem);
+
+    // create a copy of the dem for rendering
+    demScene = dem.clone();
+    //demScene.position.set(dem.position);
+    demScene.material = createViewMaterial(rtTarget.texture);
+    scene.add(demScene);
   },
-  function () {},
+  function () { },
   function () {
     console.log(`An error happened when loading ${demURL}`);
   }
@@ -412,10 +440,10 @@ function init() {
     }
   );
 
-  const plane = new THREE.PlaneGeometry(2, 2);
-  const screenMaterial = createScreenMaterial(rtTarget.texture);
-  const quad = new THREE.Mesh(plane, screenMaterial);
-  scene.add(quad);
+  //const plane = new THREE.PlaneGeometry(2, 2);
+  //const screenMaterial = createScreenMaterial(rtTarget.texture);
+  //const quad = new THREE.Mesh(plane, screenMaterial);
+  //scene.add(quad);
   document.body.appendChild(renderer.domElement);
 
   document.getElementById("PC1").classList.add("clicked");
@@ -426,12 +454,13 @@ function Resize() {
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
     renderer.setSize(windowWidth, windowHeight);
-    composer.setSize(windowWidth, windowHeight);
+    //composer.setSize(windowWidth, windowHeight);
   }
 }
 
 function setFocus() {
   dem.position.z = document.getElementById("FocusInput").value;
+  demScene.position.z = dem.position.z;
   document
     .getElementById("FocusInput")
     .style.setProperty("--value", dem.position.z);
@@ -498,16 +527,25 @@ function renderLightField2() {
 
 function renderPointCloud() {
   if (document.getElementById("PC1").classList.contains("clicked")) {
-    PCDloader.load(
+    if (pointCloud) {
+      pointCloud.parent.remove(pointCloud);
+    }
+    plyLoader.load(
       forest,
-      function (mesh) {
+      function (geometry) {
+        const material = new THREE.PointsMaterial({
+          vertexColors: true
+        });
+        const mesh = new THREE.Points(geometry, material);
+        scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
-          mesh.material.color.setHex(0xff7b00);
-          scene.add(mesh);
+          mesh.visible = true;
         }
         if (document.getElementById("PCView").checked == false) {
           mesh.visible = false;
         }
+
+        pointCloud = mesh;
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
@@ -640,7 +678,7 @@ function render() {
   document.getElementById("FOVAmount").value = mainCamera.fov;
   mainCamera.updateProjectionMatrix();
   renderer.render(scene, mainCamera);
-  composer.render(0.1);
+  //composer.render(0.1);
 
   if (document.querySelector("#DebugView").checked) {
     axesHelper.visible = true;
