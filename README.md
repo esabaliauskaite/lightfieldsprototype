@@ -27,5 +27,17 @@ LIVE: https://esabaliauskaite.github.io/lightfieldsprototype/
 - **Toggle between views.** Using CSS a toggle was created from a checkbox. If this checkbox is checked, pointcloud view is shown. If it is unchecked, light field view is shown.
 - **Toggle between datasets.** Depending on which onClick event is called a class named clicked is added to change the background color and load the corresponding dataset.
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+## Variants
+
+Variants can be found in other branches
+
+| **Functionality**        | **Variant 1**      | **Variant 2**          |
+|--------------------------|--------------------|------------------------|
+| _Camera position_        | Possible to change | Not possible to change |
+| _Camera orientation_     | Front vector       | Quat                   |
+| _Focus_                  | Plane              | Plane                  |
+| _Pinhole view_           | Closest one        | Selection              |
+| _Field of view_          | Possible to change | Not possible to change |
+| _Checkbox: Camera Array_ | +                  | +                      |
+| _Checkbox: Debug View_   | +                  | +                      |
+| _Checkbox: Point Cloud_  | +                  | +                      |
