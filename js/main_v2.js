@@ -617,15 +617,23 @@ function render() {
     document.getElementById("PinholeView").checked
   ) {
     renderer.clear();
-    for (let i in forestImageLocations) {
-      if (mainCamera.position.distanceTo(forestImageLocations[i]) < distance) {
-        distance = mainCamera.position.distanceTo(forestImageLocations[i]);
-        forestImage = i;
-      }
-    }
-    dem.material = ForestsingleImageMaterials[forestImage];
+    mainCamera.fov = singleImageFov;
+    document.getElementById("PinholeInput").min = 0;
+    document.getElementById("PinholeInput").max =
+      ForestsingleImageMaterials.length - 1;
+    dem.material =
+      ForestsingleImageMaterials[document.getElementById("PinholeInput").value];
     renderer.render(rtScene, mainCamera);
-    console.log(distance + " " + forestImage);
+    for (let e of document.querySelectorAll(
+      'input[type="range"].styled-slider'
+    )) {
+      e.style.setProperty("--value", e.value);
+      e.style.setProperty("--min", e.min == "" ? "-100" : e.min);
+      e.style.setProperty("--max", e.max == "" ? "100" : e.max);
+      e.addEventListener("input", () =>
+        e.style.setProperty("--value", e.value)
+      );
+    }
   }
 
   if (
@@ -633,14 +641,23 @@ function render() {
     document.getElementById("PinholeView").checked
   ) {
     renderer.clear();
-    for (let i in urbanImageLocations) {
-      if (mainCamera.position.distanceTo(urbanImageLocations[i]) < distance) {
-        distance = mainCamera.position.distanceTo(urbanImageLocations[i]);
-        urbanImage = i;
-      }
-    }
-    dem.material = singleImageMaterials[urbanImage];
+    mainCamera.fov = singleImageFov;
+    document.getElementById("PinholeInput").min = 0;
+    document.getElementById("PinholeInput").max =
+      singleImageMaterials.length - 1;
+    dem.material =
+      singleImageMaterials[document.getElementById("PinholeInput").value];
     renderer.render(rtScene, mainCamera);
+    for (let e of document.querySelectorAll(
+      'input[type="range"].styled-slider'
+    )) {
+      e.style.setProperty("--value", e.value);
+      e.style.setProperty("--min", e.min == "" ? "-100" : e.min);
+      e.style.setProperty("--max", e.max == "" ? "100" : e.max);
+      e.addEventListener("input", () =>
+        e.style.setProperty("--value", e.value)
+      );
+    }
   }
 
   renderer.setRenderTarget(null);

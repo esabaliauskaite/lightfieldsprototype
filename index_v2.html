@@ -2,23 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Version 1</title>
+    <title>VERSION 2</title>
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/slider.css" />
     <link rel="stylesheet" href="css/checkbox.css" />
-    <script src="js/main.js" type="module"></script>
+    <script src="js/main_v2.js" type="module"></script>
   </head>
-  <body onload="on()">
-    <div id="overlay">
-      <div class="versionselection">
-        <div class="button" onclick="off()">
-          <span class="buttonText">VERSION 1</span>
-        </div>
-        <div class="button" onclick="v2()">
-          <a class="buttonText">VERSION 2</a>
-        </div>
-      </div>
-    </div>
+  <body>
     <div id="canvas">
       <div class="menubtn">
         <div class="controlsbtn button" onclick="onClick()">
@@ -181,7 +171,15 @@
           <div class="FOV block">
             <img src="svg/fov.svg" alt="close" class="functionalities" />
             <p class="title">CURRENT FIELD OF VIEW</p>
-            <input id="FOVAmount" type="number" class="TextInput" />
+            <div class="slider">
+              <input
+                id="FOVAmount"
+                type="number"
+                min="-100"
+                max="100"
+                class="TextInput"
+              />
+            </div>
           </div>
           <br />
 
@@ -194,9 +192,30 @@
                 id="PinholeView"
                 name="PinholeView"
                 value="Array"
+                onClick="toggleVisibility()"
               />
               <span class="checkmark"></span>
             </label>
+            <div id="pinholeslider" class="slider">
+              <input
+                id="PinholeInput"
+                type="range"
+                min="0"
+                max="200"
+                value="0"
+                class="slidersSize styled-slider slider-progress"
+                oninput="PinholeAmount.value=PinholeInput.value"
+              />
+              <input
+                id="PinholeAmount"
+                type="number"
+                min="0"
+                max="200"
+                value="0"
+                class="TextInput"
+                oninput="PinholeInput.value=PinholeAmount.value"
+              />
+            </div>
           </div>
 
           <div class="optional">
@@ -294,8 +313,9 @@
         window.location.href = "/";
       }
 
-      function v2() {
-        window.location.href = "index_v2.html";
+      function toggleVisibility() {
+        var elem = document.getElementById("pinholeslider");
+        elem.style.display = elem.style.display != "flex" ? "flex" : "none";
       }
 
       function onClick() {
@@ -357,14 +377,6 @@
         e.addEventListener("input", () =>
           e.style.setProperty("--value", e.value)
         );
-      }
-
-      function on() {
-        document.getElementById("overlay").style.display = "block";
-      }
-
-      function off() {
-        document.getElementById("overlay").style.display = "none";
       }
     </script>
   </body>
