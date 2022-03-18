@@ -55,11 +55,6 @@ class cameraHelperArray extends LineSegments {
     addLine("u2", "u3", colorUp);
     addLine("u3", "u1", colorUp);
 
-    // target
-
-    addLine("c", "t", colorTarget);
-    addLine("p", "c", colorCross);
-
     // cross
 
     addLine("cn1", "cn2", colorCross);

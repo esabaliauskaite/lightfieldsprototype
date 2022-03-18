@@ -175,8 +175,6 @@ div .slider {
   z-index: 1;
   bottom: 3%;
   right: 35%;
-  display: flex;
-  justify-items: center;
 }
 
 .button {
@@ -335,4 +333,10 @@ div .slider {
 
 #pinholeslider {
   display: none;
+}
+
+.datasets {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
 }
