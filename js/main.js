@@ -8,9 +8,7 @@ import fragmentScreen from "./shaders/fragmentScreen.js";
 import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
-import { setCameraX, setCameraY, setCameraZ, setFOV } from "./setControls.js";
 import { renderLightField1, renderLightField2 } from "./renderLF.js";
-import { keyboardControls } from "./controls.js";
 
 // # Debug Scene ##
 const imgURL = "./data/debug_scene/";
@@ -39,7 +37,7 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 10],
+    eye: [0, 0, 20],
     up: [0, -1, 0],
     fov: 60,
   },
@@ -49,8 +47,8 @@ const views = {
     width: 0.15,
     height: 0.2,
     background: debugbgColor,
-    eye: [0, -10, 90],
-    up: [0, -1, 0],
+    eye: [0, -1, 9],
+    up: [0, 1, 0],
     fov: 60,
   },
 };
@@ -365,7 +363,7 @@ function init() {
   mainCamera.position.fromArray(mainView.eye);
   mainCamera.up.fromArray(mainView.up);
   mainView.camera = mainCamera;
-
+  mainCamera.fov = mainView.fov;
   document.getElementById("FOVAmount").value = mainCamera.fov;
 
   document.getElementById("CameraXInput").value = mainCamera.position.x;
@@ -408,6 +406,10 @@ function init() {
     }
   );
 
+  document.getElementById("CameraOrrientationX").value = mainView.up[0];
+  document.getElementById("CameraOrrientationY").value = mainView.up[1];
+  document.getElementById("CameraOrrientationZ").value = mainView.up[2];
+
   document.body.appendChild(renderer.domElement);
 
   document.getElementById("PC1").classList.add("clicked");
@@ -431,10 +433,26 @@ function setFocus() {
     document.getElementById("FocusInput").value;
 }
 
-setCameraX(mainCamera);
-setCameraY(mainCamera);
-setCameraZ(mainCamera);
-setFOV(mainCamera);
+function setCamera() {
+  mainCamera.position.x = document.getElementById("CameraXInput").value;
+  document
+    .getElementById("CameraXInput")
+    .style.setProperty("--value", mainCamera.position.x);
+  document.getElementById("CameraXamount").value =
+    document.getElementById("CameraXInput").value;
+
+  mainCamera.position.y = document.getElementById("CameraYInput").value;
+  document
+    .getElementById("CameraYInput")
+    .style.setProperty("--value", mainCamera.position.y);
+  document.getElementById("CameraYamount").value =
+    document.getElementById("CameraYInput").value;
+
+  mainCamera.position.z = document.getElementById("CameraZInput").value;
+  document
+    .getElementById("CameraZInput")
+    .style.setProperty("--value", mainCamera.position.z);
+}
 
 function renderPointCloud() {
   if (document.getElementById("PC1").classList.contains("clicked")) {
@@ -472,12 +490,11 @@ function renderPointCloud() {
 function animation() {
   let id = null;
   const elem = document.getElementById("FocusInput");
-  document.getElementById("FocusInput").value = 10;
   let pos = document.getElementById("FocusInput").value;
   clearInterval(id);
-  id = setInterval(frame, 180);
+  id = setInterval(frame, 120);
   function frame() {
-    if (pos == -20) {
+    if (pos == -15) {
       clearInterval(id);
     } else {
       pos--;
@@ -491,17 +508,17 @@ function animation() {
   }
 }
 
+function setFOV() {
+  mainCamera.fov = document.getElementById("FOVAmount").value;
+  mainCamera.updateProjectionMatrix();
+}
+
 async function LF1(renderLightField1) {
   if (document.querySelector("#PC1").classList.contains("clicked")) {
     renderLightField1();
-    mainCamera.up.fromArray(mainView.up);
-    mainCamera.lookAt(0, 0, 0);
-    document.getElementById("CameraOrrientationX").value = mainView.up[0];
-    document.getElementById("CameraOrrientationY").value = mainView.up[1];
-    document.getElementById("CameraOrrientationZ").value = mainView.up[2];
     for (let i = 0; i < ForestsingleImageMaterials.length; i++) {
       dem.material = ForestsingleImageMaterials[i];
-      renderer.render(rtScene, views.main.camera);
+      renderer.render(rtScene, mainCamera);
     }
   }
 }
@@ -509,14 +526,9 @@ async function LF1(renderLightField1) {
 async function LF2(renderLightField2) {
   if (document.querySelector("#PC2").classList.contains("clicked")) {
     renderLightField2();
-    mainCamera.up.set(0, 1, 0);
-    mainCamera.lookAt(0, 0, 0);
-    document.getElementById("CameraOrrientationX").value = mainCamera.up.x;
-    document.getElementById("CameraOrrientationY").value = mainCamera.up.y;
-    document.getElementById("CameraOrrientationZ").value = mainCamera.up.z;
     for (let i = 0; i < singleImageMaterials.length; i++) {
       dem.material = singleImageMaterials[i];
-      renderer.render(rtScene, views.main.camera);
+      renderer.render(rtScene, mainCamera);
     }
   }
 }
@@ -535,6 +547,7 @@ async function LF1Pinhole() {
     }
     dem.material = ForestsingleImageMaterials[forestImage];
     renderer.render(rtScene, mainCamera);
+    console.log(distance + " " + forestImage);
   }
 }
 
@@ -555,44 +568,23 @@ async function LF2Pinhole() {
   }
 }
 
-async function eventListeners(
-  keyboardControls,
-  animation,
-  setFocus,
-  setFOV,
-  setCameraX,
-  setCameraY,
-  setCameraZ,
-  renderLightField1,
-  renderLightField2,
-  showCameraArray,
-  renderPointCloud
-) {
-  document.addEventListener("keydown", (e) => {
-    keyboardControls(e, mainCamera);
-  });
+async function eventListeners() {
   document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
-  document
-    .getElementById("CameraXInput")
-    .addEventListener("input", setCameraX(mainCamera));
-  document
-    .getElementById("CameraYInput")
-    .addEventListener("input", setCameraY(mainCamera));
-  document
-    .getElementById("CameraZInput")
-    .addEventListener("input", setCameraZ(mainCamera));
+  document.getElementById("CameraXInput").addEventListener("input", setCamera);
+  document.getElementById("CameraYInput").addEventListener("input", setCamera);
+  document.getElementById("CameraZInput").addEventListener("input", setCamera);
   document
     .getElementById("CameraXamount")
-    .addEventListener("change", setCameraX(mainCamera));
+    .addEventListener("change", setCamera);
   document
     .getElementById("CameraYamount")
-    .addEventListener("change", setCameraY(mainCamera));
+    .addEventListener("change", setCamera);
   document
     .getElementById("CameraZamount")
-    .addEventListener("change", setCameraZ(mainCamera));
+    .addEventListener("change", setCamera);
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
   document
@@ -605,19 +597,7 @@ async function eventListeners(
 function render() {
   requestAnimationFrame(render);
   Resize();
-  eventListeners(
-    keyboardControls,
-    animation,
-    setFocus,
-    setFOV,
-    setCameraX,
-    setCameraY,
-    setCameraZ,
-    renderLightField1,
-    renderLightField2,
-    showCameraArray,
-    renderPointCloud
-  );
+  eventListeners();
 
   renderer.autoClear = false;
   renderer.setRenderTarget(rtTarget);
