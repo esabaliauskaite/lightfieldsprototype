@@ -612,33 +612,39 @@ async function eventListeners() {
   document.getElementById("PCView").addEventListener("click", renderPointCloud);
 }
 
-function render() {
-  requestAnimationFrame(render);
-  Resize();
-
+async function controls() {
   document.onkeydown = function (e) {
     if (e.key == "ArrowUp" || e.key == "w") {
       mainCamera.position.y += 1;
-      setCameraY(mainCamera);
-      console.log("+y");
+      document.getElementById("CameraYInput").value = mainCamera.position.y;
+      document.getElementById("CameraYamount").value =
+        document.getElementById("CameraYInput").value;
     }
     if (e.key == "ArrowDown" || e.key == "s") {
       mainCamera.position.y -= 1;
-      setCameraY(mainCamera);
-      console.log("-y");
+      document.getElementById("CameraYInput").value = mainCamera.position.y;
+      document.getElementById("CameraYamount").value =
+        document.getElementById("CameraYInput").value;
     }
     if (e.key == "ArrowLeft" || e.key == "d") {
-      mainCamera.position.x += 1;
-      setCameraX(mainCamera);
-      console.log("+x");
+      mainCamera.position.x -= 1;
+      document.getElementById("CameraXInput").value = mainCamera.position.x;
+      document.getElementById("CameraXamount").value =
+        document.getElementById("CameraXInput").value;
     }
     if (e.key == "ArrowRight" || e.key == "a") {
-      mainCamera.position.x -= 1;
-      setCameraX(mainCamera);
-      console.log("-x");
+      mainCamera.position.x += 1;
+      document.getElementById("CameraXInput").value = mainCamera.position.x;
+      document.getElementById("CameraXamount").value =
+        document.getElementById("CameraXInput").value;
     }
   };
+}
 
+function render() {
+  requestAnimationFrame(render);
+  Resize();
+  controls();
   eventListeners();
 
   renderer.autoClear = false;
