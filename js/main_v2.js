@@ -377,9 +377,9 @@ function init() {
   //Orbit controls for user
   const mainControls = new OrbitControls(mainCamera, renderer.domElement);
   mainControls.mouseButtons = {
-    LEFT: THREE.MOUSE.ROTATE,
+    LEFT: "",
     MIDDLE: THREE.MOUSE.DOLLY,
-    RIGHT: THREE.MOUSE.PAN,
+    RIGHT: "",
   };
 
   cameraHelper = new THREE.CameraHelper(mainCamera);
