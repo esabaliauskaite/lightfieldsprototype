@@ -412,7 +412,7 @@ function init() {
 
   document.body.appendChild(renderer.domElement);
 
-  document.getElementById("PC1").classList.add("clicked");
+  document.getElementById("PC2").classList.add("clicked");
 }
 
 function Resize() {
