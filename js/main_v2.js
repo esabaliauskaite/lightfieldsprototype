@@ -38,7 +38,7 @@ const views = {
     height: 1.0,
     background: bgColor,
     eye: [0, 0, 10],
-    up: [0, -1, 0],
+    up: [0, 1, 0],
     fov: 60,
   },
   debug: {
@@ -178,7 +178,7 @@ fetchPosesJSON(poseURL).then((poses) => {
       quat.z = pose.rotation[2];
       quat.w = pose.rotation[3];
     }
-    pos.z = pos.z;
+    pos.z = -pos.z;
 
     positions.push(pos);
     urbanImageLocations.push(pos);
@@ -468,9 +468,12 @@ function renderPointCloud() {
       forest,
       function (geometry) {
         const material = new THREE.PointsMaterial({
+          size: 0.01,
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
+        mesh.rotation.z = -1.5;
+        mesh.rotation.y = -3.14159;
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;

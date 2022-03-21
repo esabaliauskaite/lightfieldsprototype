@@ -37,8 +37,8 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 20],
-    up: [0, -1, 0],
+    eye: [0, 0, 40],
+    up: [0, 1, 0],
     fov: 60,
   },
   debug: {
@@ -170,7 +170,6 @@ fetchPosesJSON(poseURL).then((poses) => {
         1
       );
       matrix.decompose(pos, quat, scale);
-      pos.x = -pos.x;
     } else {
       pos.fromArray(pose.location);
       quat.x = pose.rotation[0];
@@ -248,8 +247,6 @@ fetchPosesJSON(ForestposeURL).then((poses) => {
       quat.z = pose.rotation[2];
       quat.w = pose.rotation[3];
     }
-
-    //pos.z = -pos.z;
     positions.push(pos);
 
     const camera = new THREE.PerspectiveCamera(
@@ -309,11 +306,11 @@ function showCameraArray() {
       for (let i = 0; i < cameraArrayHelper.length; i++) {
         cameraArrayHelper[i].visible = true;
       }
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = false;
       }
     } else if (document.querySelector("#PC1").classList.contains("clicked")) {
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = true;
       }
       for (let i = 0; i < cameraArrayHelper.length; i++) {
@@ -326,7 +323,7 @@ function showCameraArray() {
         cameraArrayHelper[i].visible = false;
       }
     } else {
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = false;
       }
     }
@@ -377,9 +374,9 @@ function init() {
   //Orbit controls for user
   const mainControls = new OrbitControls(mainCamera, renderer.domElement);
   mainControls.mouseButtons = {
-    LEFT: "",
+    LEFT: THREE.MOUSE.ROTATE,
     MIDDLE: THREE.MOUSE.DOLLY,
-    RIGHT: "",
+    RIGHT: THREE.MOUSE.PAN,
   };
 
   cameraHelper = new THREE.CameraHelper(mainCamera);
@@ -465,9 +462,12 @@ function renderPointCloud() {
       forest,
       function (geometry) {
         const material = new THREE.PointsMaterial({
+          size: 0.01,
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
+        mesh.rotation.z = -1.5;
+        mesh.rotation.y = -3.14159;
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
@@ -570,6 +570,18 @@ async function LF2Pinhole() {
   }
 }
 
+async function LFOrrientation() {
+  if (document.querySelector("#PC1").classList.contains("clicked")) {
+    document.getElementById("CameraOrrientationX").value = mainView.up[0];
+    document.getElementById("CameraOrrientationY").value = mainView.up[1];
+    document.getElementById("CameraOrrientationZ").value = mainView.up[2];
+  } else if (document.querySelector("#PC2").classList.contains("clicked")) {
+    document.getElementById("CameraOrrientationX").value = mainCamera.up.x;
+    document.getElementById("CameraOrrientationY").value = mainCamera.up.y;
+    document.getElementById("CameraOrrientationZ").value = mainCamera.up.z;
+  }
+}
+
 async function eventListeners() {
   document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
@@ -630,6 +642,7 @@ function render() {
   Resize();
   eventListeners();
   controls();
+  LFOrrientation();
 
   renderer.autoClear = false;
   renderer.setRenderTarget(rtTarget);
