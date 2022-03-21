@@ -25,7 +25,6 @@ const debugbgColor = new THREE.Color(0, 0, 0);
 let quat = new THREE.Quaternion();
 const demURL = "./data/zero_plane.obj";
 
-let distance = 1000;
 let forestImageLocations = [];
 let urbanImageLocations = [];
 let forestImage, urbanImage;
@@ -37,7 +36,7 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 10],
+    eye: [0, 0, 20],
     up: [0, 1, 0],
     fov: 60,
   },

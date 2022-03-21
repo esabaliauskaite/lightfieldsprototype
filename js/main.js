@@ -37,7 +37,7 @@ const views = {
     width: 1.0,
     height: 1.0,
     background: bgColor,
-    eye: [0, 0, 40],
+    eye: [0, 0, 20],
     up: [0, 1, 0],
     fov: 60,
   },
@@ -306,11 +306,11 @@ function showCameraArray() {
       for (let i = 0; i < cameraArrayHelper.length; i++) {
         cameraArrayHelper[i].visible = true;
       }
-      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = false;
       }
     } else if (document.querySelector("#PC1").classList.contains("clicked")) {
-      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = true;
       }
       for (let i = 0; i < cameraArrayHelper.length; i++) {
@@ -323,7 +323,7 @@ function showCameraArray() {
         cameraArrayHelper[i].visible = false;
       }
     } else {
-      for (let i = 300; i < ForestcameraArrayHelper.length; i++) {
+      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
         ForestcameraArrayHelper[i].visible = false;
       }
     }
