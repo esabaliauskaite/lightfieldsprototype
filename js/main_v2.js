@@ -76,6 +76,7 @@ const textureLoader = new THREE.TextureLoader();
 const loader = new OBJLoader();
 
 let forest = "./data/forest_F5/F5.ply";
+let debugply = "./data/blender.ply";
 
 const plyLoader = new PLYLoader();
 
@@ -491,6 +492,36 @@ function renderPointCloud() {
       }
     );
   } else if (document.getElementById("PC2").classList.contains("clicked")) {
+    if (pointCloud) {
+      pointCloud.parent.remove(pointCloud);
+    }
+    plyLoader.load(
+      debugply,
+      function (geometry) {
+        const material = new THREE.PointsMaterial({
+          size: 0.01,
+          vertexColors: true,
+        });
+        const mesh = new THREE.Points(geometry, material);
+        mesh.rotation.y = -3;
+        mesh.rotation.z = -3;
+        scene.add(mesh);
+        if (document.getElementById("PCView").checked == true) {
+          mesh.visible = true;
+        }
+        if (document.getElementById("PCView").checked == false) {
+          mesh.visible = false;
+        }
+
+        pointCloud = mesh;
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.log("An error happened");
+      }
+    );
   }
 }
 
