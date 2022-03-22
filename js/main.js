@@ -47,8 +47,8 @@ const views = {
     width: 0.15,
     height: 0.2,
     background: debugbgColor,
-    eye: [0, -1, 9],
-    up: [0, 1, 0],
+    eye: [0, -10, 90],
+    up: [0, -1, 0],
     fov: 60,
   },
 };
@@ -642,25 +642,25 @@ async function eventListeners() {
 async function controls() {
   document.onkeydown = function (e) {
     if (e.key == "ArrowUp" || e.key == "w") {
-      mainCamera.position.y += 1;
-      document.getElementById("CameraYInput").value = mainCamera.position.y;
-      document.getElementById("CameraYamount").value =
-        document.getElementById("CameraYInput").value;
-    }
-    if (e.key == "ArrowDown" || e.key == "s") {
       mainCamera.position.y -= 1;
       document.getElementById("CameraYInput").value = mainCamera.position.y;
       document.getElementById("CameraYamount").value =
         document.getElementById("CameraYInput").value;
     }
+    if (e.key == "ArrowDown" || e.key == "s") {
+      mainCamera.position.y += 1;
+      document.getElementById("CameraYInput").value = mainCamera.position.y;
+      document.getElementById("CameraYamount").value =
+        document.getElementById("CameraYInput").value;
+    }
     if (e.key == "ArrowLeft" || e.key == "d") {
-      mainCamera.position.x -= 1;
+      mainCamera.position.x += 1;
       document.getElementById("CameraXInput").value = mainCamera.position.x;
       document.getElementById("CameraXamount").value =
         document.getElementById("CameraXInput").value;
     }
     if (e.key == "ArrowRight" || e.key == "a") {
-      mainCamera.position.x += 1;
+      mainCamera.position.x -= 1;
       document.getElementById("CameraXInput").value = mainCamera.position.x;
       document.getElementById("CameraXamount").value =
         document.getElementById("CameraXInput").value;
