@@ -12,3 +12,4 @@ jobs:
         uses: calibreapp/image-actions@1.1.0
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          pngQuality: '60'
