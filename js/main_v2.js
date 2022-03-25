@@ -523,6 +523,19 @@ function renderPointCloud() {
   }
 }
 
+function setFocusValue() {
+  if (document.querySelector("#PC1").classList.contains("clicked")) {
+    dem.position.z = -4;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
+  }
+  if (document.querySelector("#PC2").classList.contains("clicked")) {
+    dem.position.z = -11;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
+  }
+}
+
 function animation() {
   let id = null;
   const elem = document.getElementById("FocusInput");
@@ -621,6 +634,8 @@ async function eventListeners() {
   document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
+  document.getElementById("PC1").addEventListener("click", setFocusValue);
+  document.getElementById("PC2").addEventListener("click", setFocusValue);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
   document.getElementById("CameraXInput").addEventListener("input", setCamera);
   document.getElementById("CameraYInput").addEventListener("input", setCamera);

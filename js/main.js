@@ -267,6 +267,7 @@ fetchPosesJSON(ForestposeURL).then((poses) => {
     if (dem) {
       dem.material = ForestsingleImageMaterial;
     }
+
     const helper = new cameraHelperArray(camera);
     scene.add(helper);
     helper.visible = false;
@@ -281,14 +282,12 @@ loader.load(
   function (object) {
     dem = object.children[0];
     dem.scale.fromArray([1, 1, -1]);
-    //scene.add(dem);
-    dem.position.z = -4;
-    document.getElementById("Focusamount").value = dem.position.z;
-    document.getElementById("FocusInput").value = dem.position.z;
     focus = dem.position.z;
     sceneGeometries.push(dem);
     rtScene.add(dem);
-
+    dem.position.z = -4;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
     // create a copy of the dem for rendering
     demScene = dem.clone();
     //demScene.position.set(dem.position);
@@ -546,6 +545,19 @@ function setFOV() {
   mainCamera.updateProjectionMatrix();
 }
 
+function setFocusValue() {
+  if (document.querySelector("#PC1").classList.contains("clicked")) {
+    dem.position.z = -4;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
+  }
+  if (document.querySelector("#PC2").classList.contains("clicked")) {
+    dem.position.z = -11;
+    document.getElementById("Focusamount").value = dem.position.z;
+    document.getElementById("FocusInput").value = dem.position.z;
+  }
+}
+
 async function LF1(renderLightField1) {
   if (document.querySelector("#PC1").classList.contains("clicked")) {
     renderLightField1();
@@ -617,6 +629,8 @@ async function eventListeners() {
   document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
+  document.getElementById("PC1").addEventListener("click", setFocusValue);
+  document.getElementById("PC2").addEventListener("click", setFocusValue);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
   document.getElementById("CameraXInput").addEventListener("input", setCamera);
   document.getElementById("CameraYInput").addEventListener("input", setCamera);
