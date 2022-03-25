@@ -169,7 +169,6 @@ fetchPosesJSON(poseURL).then((poses) => {
         1
       );
       matrix.decompose(pos, quat, scale);
-      pos.x = -pos.x;
     } else {
       pos.fromArray(pose.location);
       quat.x = pose.rotation[0];
@@ -177,7 +176,7 @@ fetchPosesJSON(poseURL).then((poses) => {
       quat.z = pose.rotation[2];
       quat.w = pose.rotation[3];
     }
-    pos.z = -pos.z;
+    pos.z = pos.z;
 
     positions.push(pos);
     urbanImageLocations.push(pos);
