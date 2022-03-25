@@ -186,7 +186,6 @@ fetchPosesJSON(poseURL).then((poses) => {
     camera.applyQuaternion(quat);
 
     let url = imgURL + pose.imagefile;
-    url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
     const singleImageMaterial = createProjectiveMaterial(camera, tex);
     singleImageMaterials.push(singleImageMaterial);
@@ -261,7 +260,6 @@ fetchPosesJSON(ForestposeURL).then((poses) => {
     camera.applyQuaternion(quat);
 
     let url = ForestimgURL + pose.imagefile;
-    url = url.replace(".tiff", ".png");
     const tex = textureLoader.load(url);
     const ForestsingleImageMaterial = createProjectiveMaterial(camera, tex);
     ForestsingleImageMaterials.push(ForestsingleImageMaterial);
