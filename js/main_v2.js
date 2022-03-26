@@ -1,5 +1,4 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.130.1/build/three.module.js";
-import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/controls/OrbitControls.js";
 import { OBJLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/OBJLoader.js";
 import { PLYLoader } from "https://cdn.skypack.dev/three@0.130.1/examples/jsm/loaders/PLYLoader.js";
 
@@ -8,6 +7,7 @@ import fragmentScreen from "./shaders/fragmentScreen.js";
 import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
+import { FlyControls } from "./modules/flyControls.js";
 import { renderLightField1, renderLightField2 } from "./renderLF.js";
 
 // # Debug Scene ##
@@ -370,13 +370,10 @@ function init() {
   document.getElementById("CameraYamount").value = mainCamera.position.y;
   document.getElementById("CameraZamount").value = mainCamera.position.z;
 
-  //Orbit controls for user
-  const mainControls = new OrbitControls(mainCamera, renderer.domElement);
-  mainControls.mouseButtons = {
-    LEFT: THREE.MOUSE.ROTATE,
-    MIDDLE: THREE.MOUSE.DOLLY,
-    RIGHT: THREE.MOUSE.PAN,
-  };
+  //controls for user
+  mainControls = new FlyControls(mainCamera, renderer.domElement);
+  mainControls.dragToLook = true;
+
   cameraHelper = new THREE.CameraHelper(mainCamera);
   scene.add(cameraHelper);
 
@@ -655,38 +652,10 @@ async function eventListeners() {
   document.getElementById("PCView").addEventListener("click", renderPointCloud);
 }
 
-async function controls() {
-  document.onkeydown = function (e) {
-    if (e.key == "ArrowUp" || e.key == "w") {
-      mainCamera.position.y -= 1;
-      document.getElementById("CameraYInput").value = mainCamera.position.y;
-      document.getElementById("CameraYamount").value =
-        document.getElementById("CameraYInput").value;
-    }
-    if (e.key == "ArrowDown" || e.key == "s") {
-      mainCamera.position.y += 1;
-      document.getElementById("CameraYInput").value = mainCamera.position.y;
-      document.getElementById("CameraYamount").value =
-        document.getElementById("CameraYInput").value;
-    }
-    if (e.key == "ArrowLeft" || e.key == "d") {
-      mainCamera.position.x += 1;
-      document.getElementById("CameraXInput").value = mainCamera.position.x;
-      document.getElementById("CameraXamount").value =
-        document.getElementById("CameraXInput").value;
-    }
-    if (e.key == "ArrowRight" || e.key == "a") {
-      mainCamera.position.x -= 1;
-      document.getElementById("CameraXInput").value = mainCamera.position.x;
-      document.getElementById("CameraXamount").value =
-        document.getElementById("CameraXInput").value;
-    }
-  };
-}
 function render() {
   requestAnimationFrame(render);
+  mainControls.update(1);
   Resize();
-  controls();
   eventListeners();
 
   renderer.autoClear = false;
