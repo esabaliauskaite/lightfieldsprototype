@@ -66,7 +66,7 @@ let sceneGeometries = [];
 let rtTarget;
 let rtScene;
 
-let mainCamera, debugCamera;
+let mainCamera, debugCamera, mainControls;
 let axesHelper, cameraHelper;
 
 let windowWidth, windowHeight;
