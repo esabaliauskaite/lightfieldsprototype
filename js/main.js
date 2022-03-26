@@ -11,8 +11,8 @@ import { FlyControls } from "./modules/flyControls.js";
 import { renderLightField1, renderLightField2 } from "./renderLF.js";
 
 // # Debug Scene ##
-const imgURL = "./data/debug_scene/";
-const poseURL = "./data/debug_scene/blender_poses.json";
+const imgURL = "./data/tutorial/";
+const poseURL = "./data/tutorial/tutorial_poses.json";
 const singleImageFov = 60; // degrees
 
 // # Forest Scene ##
