@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="325" height="150" viewBox="0 0 325 150">
-  <g id="Group_18" data-name="Group 18" transform="translate(-619 -522)">
-    <g id="Group_15" data-name="Group 15" transform="translate(485 440)">
+  <g id="yaw" transform="translate(847 -134) rotate(90)">
+    <g id="Group_13" data-name="Group 13" transform="translate(0 440)">
       <g id="Rectangle_1" data-name="Rectangle 1" transform="translate(134 82)" fill="none" stroke="#fff" stroke-width="15">
         <rect width="150" height="150" rx="15" stroke="none"/>
         <rect x="7.5" y="7.5" width="135" height="135" rx="7.5" fill="none"/>
       </g>
-      <g id="arrow_right_alt_white_24dp" transform="translate(164 112)">
-        <path id="Path_1" data-name="Path 1" d="M90,0H0V90H90Z" fill="none"/>
-        <path id="Path_2" data-name="Path 2" d="M21.614,19.269H74.631v7.513H21.614V38.051L4,23.026,21.614,8Z" transform="translate(5.684 21.974)" fill="#fff"/>
+      <g id="east_white_48dp" transform="translate(159 207) rotate(-90)">
+        <rect id="Rectangle_2" data-name="Rectangle 2" width="100" height="100" fill="none"/>
+        <path id="Path_3" data-name="Path 3" d="M53.89,58.035,48.045,52.19,67.031,33.163H0V24.872H67.031L48,5.845,53.89,0,82.908,29.018Z" transform="translate(8.291 21.238)" fill="#fff"/>
       </g>
     </g>
-    <g id="Group_16" data-name="Group 16" transform="translate(660 440)">
+    <g id="Group_22" data-name="Group 22" transform="translate(0 615)">
       <g id="Rectangle_1-2" data-name="Rectangle 1" transform="translate(134 82)" fill="none" stroke="#fff" stroke-width="15">
         <rect width="150" height="150" rx="15" stroke="none"/>
         <rect x="7.5" y="7.5" width="135" height="135" rx="7.5" fill="none"/>
       </g>
-      <g id="arrow_right_alt_white_24dp-2" data-name="arrow_right_alt_white_24dp" transform="translate(164 112)">
-        <path id="Path_1-2" data-name="Path 1" d="M0,90H90V0H0Z" fill="none"/>
-        <path id="Path_2-2" data-name="Path 2" d="M53.017,18.782H0V11.269H53.017V0L70.631,15.026,53.017,30.051Z" transform="translate(9.684 29.974)" fill="#fff"/>
+      <g id="east_white_48dp-2" data-name="east_white_48dp" transform="translate(259 107) rotate(90)">
+        <rect id="Rectangle_2-2" data-name="Rectangle 2" width="100" height="100" fill="none"/>
+        <path id="Path_3-2" data-name="Path 3" d="M53.89,0,48.045,5.845,67.031,24.872H0v8.291H67.031L48,52.19l5.886,5.845L82.908,29.018Z" transform="translate(8.291 20.727)" fill="#fff"/>
       </g>
     </g>
   </g>

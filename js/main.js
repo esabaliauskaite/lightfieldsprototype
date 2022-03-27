@@ -647,7 +647,7 @@ async function eventListeners() {
 
 function render() {
   requestAnimationFrame(render);
-  mainControls.update(1);
+  mainControls.update(0.5);
   Resize();
   eventListeners();
   LFOrrientation();

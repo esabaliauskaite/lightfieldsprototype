@@ -69,7 +69,6 @@ class FlyControls extends EventDispatcher {
         case "ShiftLeft":
         case "ShiftRight":
           this.movementSpeedMultiplier = 0.1;
-          console.log("movementSpeedMultiplier");
           break;
 
         case "KeyW":
@@ -108,10 +107,10 @@ class FlyControls extends EventDispatcher {
           break;
 
         case "KeyQ":
-          this.moveState.rollLeft = 1;
+          this.moveState.rollRight = 1;
           break;
         case "KeyE":
-          this.moveState.rollRight = 1;
+          this.moveState.rollLeft = 1;
           break;
       }
 
@@ -227,7 +226,6 @@ class FlyControls extends EventDispatcher {
     };
 
     this.update = function (delta) {
-      console.log("update");
       const moveMult = delta * scope.movementSpeed;
       const rotMult = delta * scope.rollSpeed;
 
