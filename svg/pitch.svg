@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="325" viewBox="0 0 150 325">
+  <g id="Group_19" data-name="Group 19" transform="translate(-134 -522)">
+    <g id="Group_13" data-name="Group 13" transform="translate(0 440)">
+      <g id="Rectangle_1" data-name="Rectangle 1" transform="translate(134 82)" fill="none" stroke="#fff" stroke-width="15">
+        <rect width="150" height="150" rx="15" stroke="none"/>
+        <rect x="7.5" y="7.5" width="135" height="135" rx="7.5" fill="none"/>
+      </g>
+      <g id="arrow_right_alt_white_24dp" transform="translate(164 202) rotate(-90)">
+        <path id="Path_1" data-name="Path 1" d="M0,0H90V90H0Z" fill="none"/>
+        <path id="Path_2" data-name="Path 2" d="M57.017,19.269H4v7.513H57.017V38.051L74.631,23.026,57.017,8Z" transform="translate(5.684 21.974)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_14" data-name="Group 14" transform="translate(0 615)">
+      <g id="Rectangle_1-2" data-name="Rectangle 1" transform="translate(134 82)" fill="none" stroke="#fff" stroke-width="15">
+        <rect width="150" height="150" rx="15" stroke="none"/>
+        <rect x="7.5" y="7.5" width="135" height="135" rx="7.5" fill="none"/>
+      </g>
+      <g id="arrow_right_alt_white_24dp-2" data-name="arrow_right_alt_white_24dp" transform="translate(254 112) rotate(90)">
+        <path id="Path_1-2" data-name="Path 1" d="M0,90H90V0H0Z" fill="none"/>
+        <path id="Path_2-2" data-name="Path 2" d="M53.017,18.782H0V11.269H53.017V0L70.631,15.026,53.017,30.051Z" transform="translate(9.684 29.974)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

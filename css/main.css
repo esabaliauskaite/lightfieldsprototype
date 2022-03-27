@@ -105,6 +105,7 @@ input[type="number"] {
   letter-spacing: 0px;
   color: #ffffff;
   opacity: 1;
+  margin-bottom: 5px;
 }
 
 .menu {
@@ -250,9 +251,9 @@ div .slider {
 }
 
 .instructions {
-  width: 25px;
-  height: 25px;
-  margin-top: 5px;
+  width: 35px;
+  height: 35px;
+  padding-top: 5px;
   padding-right: 5px;
 }
 

@@ -14,11 +14,13 @@ import { renderLightField1, renderLightField2 } from "./renderLF.js";
 const imgURL = "./data/tutorial/";
 const poseURL = "./data/tutorial/tutorial_poses.json";
 const singleImageFov = 60; // degrees
+let debugply = "./data/tutorial/blender.ply";
 
 // # Forest Scene ##
 const ForestimgURL = "./data/forest_F5/";
 const ForestposeURL = "./data/forest_F5/poses.json";
 const ForestsingleImageFov = 35; // degrees
+let forest = "./data/forest_F5/F5.ply";
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
@@ -27,6 +29,10 @@ const demURL = "./data/zero_plane.obj";
 
 let forestImageLocations = [];
 let urbanImageLocations = [];
+
+const textureLoader = new THREE.TextureLoader();
+const loader = new OBJLoader();
+const plyLoader = new PLYLoader();
 
 const views = {
   main: {
@@ -53,7 +59,6 @@ const views = {
 
 const mainView = views.main;
 const debugView = views.debug;
-
 let scene, renderer, dem, demScene;
 let pointCloud = null;
 let singleImages = new Array();
@@ -61,23 +66,12 @@ let singleImageMaterials = new Array();
 let ForestsingleImageMaterials = new Array();
 let cameraArrayHelper = new Array();
 let ForestcameraArrayHelper = new Array();
-
 let sceneGeometries = [];
 let rtTarget;
 let rtScene;
-
 let mainCamera, debugCamera, mainControls;
 let axesHelper, cameraHelper;
-
 let windowWidth, windowHeight;
-
-const textureLoader = new THREE.TextureLoader();
-const loader = new OBJLoader();
-
-let forest = "./data/forest_F5/F5.ply";
-let debugply = "./data/blender.ply";
-
-const plyLoader = new PLYLoader();
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({

@@ -162,10 +162,10 @@ class FlyControls extends EventDispatcher {
           break;
 
         case "KeyQ":
-          this.moveState.rollLeft = 0;
+          this.moveState.rollRight = 0;
           break;
         case "KeyE":
-          this.moveState.rollRight = 0;
+          this.moveState.rollLeft = 0;
           break;
       }
 

@@ -14,11 +14,13 @@ import { renderLightField1, renderLightField2 } from "./renderLF.js";
 const imgURL = "./data/tutorial/";
 const poseURL = "./data/tutorial/tutorial_poses.json";
 const singleImageFov = 60; // degrees
+let debugply = "./data/tutorial/blender.ply";
 
 // # Forest Scene ##
 const ForestimgURL = "./data/forest_F5/";
 const ForestposeURL = "./data/forest_F5/poses.json";
 const ForestsingleImageFov = 35; // degrees
+let forest = "./data/forest_F5/F5.ply";
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
@@ -75,10 +77,6 @@ let windowWidth, windowHeight;
 
 const textureLoader = new THREE.TextureLoader();
 const loader = new OBJLoader();
-
-let forest = "./data/forest_F5/F5.ply";
-let debugply = "./data/blender.ply";
-
 const plyLoader = new PLYLoader();
 
 function createProjectiveMaterial(projCamera, tex = null) {
