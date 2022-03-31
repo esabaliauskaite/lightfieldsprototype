@@ -9,6 +9,11 @@
     <script src="js/main_v2.js" type="module"></script>
   </head>
   <body>
+    <div class="versioning">
+      <div class="button" onclick="v1()">
+        <span class="buttonText">VERSION 2</span>
+      </div>
+    </div>
     <div id="canvas">
       <div class="menubtn">
         <div class="controlsbtn button" onclick="onClick()">
@@ -112,7 +117,7 @@
                   id="CameraOrrientationX"
                   type="number"
                   step="0.5"
-                  class="TextInput"
+                  class="greyedOut"
                   readonly
                 />
               </div>
@@ -122,7 +127,7 @@
                   id="CameraOrrientationY"
                   type="number"
                   step="0.5"
-                  class="TextInput"
+                  class="greyedOut"
                   readonly
                 />
               </div>
@@ -132,7 +137,7 @@
                   id="CameraOrrientationZ"
                   type="number"
                   step="0.5"
-                  class="TextInput"
+                  class="greyedOut"
                   readonly
                 />
               </div>
@@ -298,6 +303,8 @@
           <p class="text">
             Controls for camera, focus plane, pinhole view and aditional data.
           </p>
+          <p class="text"><strong>Version 2: </strong> &nbsp;</p>
+          <p class="text">Switch to version 1.</p>
         </div>
       </div>
     </div>
@@ -311,6 +318,9 @@
 
       function reload() {
         window.location.href = "index_v2.html";
+      }
+      function v1() {
+        window.location.href = "index.html";
       }
 
       function toggleVisibility() {

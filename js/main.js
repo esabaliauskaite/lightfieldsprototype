@@ -371,7 +371,7 @@ function init() {
   positionZ = parseFloat(document.getElementById("CameraZInput").value);
 
   //controls for user
-  mainControls = new FlyControls(mainCamera, renderer.domElement);
+  mainControls = new FlyControls(mainCamera, document.getElementById("scene"));
   mainControls.dragToLook = true;
 
   cameraHelper = new THREE.CameraHelper(mainCamera);
@@ -402,7 +402,9 @@ function init() {
   document.getElementById("CameraOrrientationY").value = mainView.up[1];
   document.getElementById("CameraOrrientationZ").value = mainView.up[2];
 
-  document.body.appendChild(renderer.domElement);
+  let container = document.getElementById("scene");
+  document.body.appendChild(container);
+  container.appendChild(renderer.domElement);
 
   document.getElementById("PC2").classList.add("clicked");
 }
@@ -435,6 +437,7 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.x);
   document.getElementById("CameraXamount").value =
     document.getElementById("CameraXInput").value;
+
   mainCamera.position.y = parseFloat(
     document.getElementById("CameraYInput").value
   );
@@ -443,6 +446,7 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.y);
   document.getElementById("CameraYamount").value =
     document.getElementById("CameraYInput").value;
+
   mainCamera.position.z = parseFloat(
     document.getElementById("CameraZInput").value
   );
@@ -451,6 +455,7 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.z);
   document.getElementById("CameraZamount").value =
     document.getElementById("CameraZInput").value;
+
   mainCamera.updateProjectionMatrix();
 }
 

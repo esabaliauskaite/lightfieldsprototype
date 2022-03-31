@@ -150,6 +150,18 @@ div .slider {
   margin-right: 10px;
 }
 
+.greyedOut {
+  border: 2px solid #adacac;
+  border-radius: 5px;
+  opacity: 1;
+  background-color: transparent;
+  font: normal normal 500 20px/26px Rajdhani;
+  color: #adacac;
+  width: 75px;
+  height: 30px;
+  margin-right: 10px;
+}
+
 .FOV {
   display: flex;
   align-items: flex-start;
@@ -330,6 +342,12 @@ div .slider {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.versioning {
+  position: fixed;
+  top: 2%;
+  left: 2%;
 }
 
 #pinholeslider {
