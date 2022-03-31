@@ -9,14 +9,6 @@ const _changeEvent = { type: "change" };
 class FlyControls extends EventDispatcher {
   constructor(object, domElement) {
     super();
-
-    if (domElement === undefined) {
-      console.warn(
-        'THREE.FlyControls: The second parameter "domElement" is now mandatory.'
-      );
-      domElement = document;
-    }
-
     this.object = object;
     this.domElement = domElement;
 
@@ -105,13 +97,6 @@ class FlyControls extends EventDispatcher {
         case "ArrowRight":
           this.moveState.yawRight = 1;
           break;
-
-        case "KeyQ":
-          this.moveState.rollRight = 1;
-          break;
-        case "KeyE":
-          this.moveState.rollLeft = 1;
-          break;
       }
 
       this.updateMovementVector();
@@ -158,13 +143,6 @@ class FlyControls extends EventDispatcher {
           break;
         case "ArrowRight":
           this.moveState.yawRight = 0;
-          break;
-
-        case "KeyQ":
-          this.moveState.rollRight = 0;
-          break;
-        case "KeyE":
-          this.moveState.rollLeft = 0;
           break;
       }
 
@@ -250,6 +228,10 @@ class FlyControls extends EventDispatcher {
         scope.dispatchEvent(_changeEvent);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
+        document.getElementById("CameraXamount").value = object.position.x;
+        document.getElementById("CameraYamount").value = object.position.y;
+        document.getElementById("CameraZamount").value = object.position.z;
+        object.updateProjectionMatrix();
       }
     };
 

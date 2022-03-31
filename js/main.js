@@ -31,6 +31,7 @@ let distance = 1000;
 let forestImageLocations = [];
 let urbanImageLocations = [];
 let forestImage, urbanImage;
+let positionX, positionY, positionZ;
 
 const views = {
   main: {
@@ -359,13 +360,15 @@ function init() {
   mainCamera.fov = mainView.fov;
   document.getElementById("FOVAmount").value = mainCamera.fov;
 
-  document.getElementById("CameraXInput").value = mainCamera.position.x;
-  document.getElementById("CameraYInput").value = mainCamera.position.y;
-  document.getElementById("CameraZInput").value = mainCamera.position.z;
-
-  document.getElementById("CameraXamount").value = mainCamera.position.x;
-  document.getElementById("CameraYamount").value = mainCamera.position.y;
-  document.getElementById("CameraZamount").value = mainCamera.position.z;
+  positionX = mainCamera.position.x;
+  positionX = parseFloat(document.getElementById("CameraXInput").value);
+  positionY = mainCamera.position.y;
+  positionY = parseFloat(document.getElementById("CameraYInput").value);
+  positionZ = mainCamera.position.z;
+  positionZ = parseFloat(document.getElementById("CameraZInput").value);
+  positionX = parseFloat(document.getElementById("CameraXamount").value);
+  positionY = parseFloat(document.getElementById("CameraYamount").value);
+  positionZ = parseFloat(document.getElementById("CameraZInput").value);
 
   //controls for user
   mainControls = new FlyControls(mainCamera, renderer.domElement);
@@ -423,26 +426,32 @@ function setFocus() {
 }
 
 function setCamera() {
-  mainCamera.position.x = document.getElementById("CameraXInput").value;
+  console.log("init" + mainCamera.position.x);
+  mainCamera.position.x = parseFloat(
+    document.getElementById("CameraXInput").value
+  );
   document
     .getElementById("CameraXInput")
     .style.setProperty("--value", mainCamera.position.x);
   document.getElementById("CameraXamount").value =
     document.getElementById("CameraXInput").value;
-
-  mainCamera.position.y = document.getElementById("CameraYInput").value;
+  mainCamera.position.y = parseFloat(
+    document.getElementById("CameraYInput").value
+  );
   document
     .getElementById("CameraYInput")
     .style.setProperty("--value", mainCamera.position.y);
   document.getElementById("CameraYamount").value =
     document.getElementById("CameraYInput").value;
-
-  mainCamera.position.z = document.getElementById("CameraZInput").value;
+  mainCamera.position.z = parseFloat(
+    document.getElementById("CameraZInput").value
+  );
   document
     .getElementById("CameraZInput")
     .style.setProperty("--value", mainCamera.position.z);
   document.getElementById("CameraZamount").value =
     document.getElementById("CameraZInput").value;
+  mainCamera.updateProjectionMatrix();
 }
 
 function renderPointCloud() {
@@ -624,18 +633,6 @@ async function eventListeners() {
   document.getElementById("PC1").addEventListener("click", setFocusValue);
   document.getElementById("PC2").addEventListener("click", setFocusValue);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
-  document.getElementById("CameraXInput").addEventListener("input", setCamera);
-  document.getElementById("CameraYInput").addEventListener("input", setCamera);
-  document.getElementById("CameraZInput").addEventListener("input", setCamera);
-  document
-    .getElementById("CameraXamount")
-    .addEventListener("change", setCamera);
-  document
-    .getElementById("CameraYamount")
-    .addEventListener("change", setCamera);
-  document
-    .getElementById("CameraZamount")
-    .addEventListener("change", setCamera);
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
   document
@@ -648,6 +645,18 @@ async function eventListeners() {
 function render() {
   requestAnimationFrame(render);
   mainControls.update(0.5);
+  document.getElementById("CameraXInput").addEventListener("input", setCamera);
+  document.getElementById("CameraYInput").addEventListener("input", setCamera);
+  document.getElementById("CameraZInput").addEventListener("input", setCamera);
+  document
+    .getElementById("CameraXamount")
+    .addEventListener("change", setCamera);
+  document
+    .getElementById("CameraYamount")
+    .addEventListener("change", setCamera);
+  document
+    .getElementById("CameraZamount")
+    .addEventListener("change", setCamera);
   Resize();
   eventListeners();
   LFOrrientation();
