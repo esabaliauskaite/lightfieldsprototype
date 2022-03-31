@@ -371,7 +371,7 @@ function init() {
   positionZ = parseFloat(document.getElementById("CameraZInput").value);
 
   //controls for user
-  mainControls = new FlyControls(mainCamera, document.getElementById("scene"));
+  mainControls = new FlyControls(mainCamera, renderer.domElement);
   mainControls.dragToLook = true;
 
   cameraHelper = new THREE.CameraHelper(mainCamera);
@@ -402,9 +402,7 @@ function init() {
   document.getElementById("CameraOrrientationY").value = mainView.up[1];
   document.getElementById("CameraOrrientationZ").value = mainView.up[2];
 
-  let container = document.getElementById("scene");
-  document.body.appendChild(container);
-  container.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.domElement);
 
   document.getElementById("PC2").classList.add("clicked");
 }
@@ -427,8 +425,7 @@ function setFocus() {
     document.getElementById("FocusInput").value;
 }
 
-function setCamera() {
-  console.log("init" + mainCamera.position.x);
+function setCameraX() {
   mainCamera.position.x = parseFloat(
     document.getElementById("CameraXInput").value
   );
@@ -437,7 +434,8 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.x);
   document.getElementById("CameraXamount").value =
     document.getElementById("CameraXInput").value;
-
+}
+function setCameraY() {
   mainCamera.position.y = parseFloat(
     document.getElementById("CameraYInput").value
   );
@@ -446,7 +444,8 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.y);
   document.getElementById("CameraYamount").value =
     document.getElementById("CameraYInput").value;
-
+}
+function setCameraZ() {
   mainCamera.position.z = parseFloat(
     document.getElementById("CameraZInput").value
   );
@@ -455,8 +454,6 @@ function setCamera() {
     .style.setProperty("--value", mainCamera.position.z);
   document.getElementById("CameraZamount").value =
     document.getElementById("CameraZInput").value;
-
-  mainCamera.updateProjectionMatrix();
 }
 
 function renderPointCloud() {
@@ -650,18 +647,18 @@ async function eventListeners() {
 function render() {
   requestAnimationFrame(render);
   mainControls.update(0.5);
-  document.getElementById("CameraXInput").addEventListener("input", setCamera);
-  document.getElementById("CameraYInput").addEventListener("input", setCamera);
-  document.getElementById("CameraZInput").addEventListener("input", setCamera);
+  document.getElementById("CameraXInput").addEventListener("input", setCameraX);
+  document.getElementById("CameraYInput").addEventListener("input", setCameraY);
+  document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
   document
     .getElementById("CameraXamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraX);
   document
     .getElementById("CameraYamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraY);
   document
     .getElementById("CameraZamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraZ);
   Resize();
   eventListeners();
   LFOrrientation();

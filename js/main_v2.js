@@ -424,25 +424,35 @@ function setFOV() {
   mainCamera.updateProjectionMatrix();
 }
 
-function setCamera() {
-  mainCamera.position.x = document.getElementById("CameraXInput").value;
+function setCameraX() {
+  mainCamera.position.x = parseFloat(
+    document.getElementById("CameraXInput").value
+  );
   document
     .getElementById("CameraXInput")
     .style.setProperty("--value", mainCamera.position.x);
   document.getElementById("CameraXamount").value =
     document.getElementById("CameraXInput").value;
-
-  mainCamera.position.y = document.getElementById("CameraYInput").value;
+}
+function setCameraY() {
+  mainCamera.position.y = parseFloat(
+    document.getElementById("CameraYInput").value
+  );
   document
     .getElementById("CameraYInput")
     .style.setProperty("--value", mainCamera.position.y);
   document.getElementById("CameraYamount").value =
     document.getElementById("CameraYInput").value;
-
-  mainCamera.position.z = document.getElementById("CameraZInput").value;
+}
+function setCameraZ() {
+  mainCamera.position.z = parseFloat(
+    document.getElementById("CameraZInput").value
+  );
   document
     .getElementById("CameraZInput")
     .style.setProperty("--value", mainCamera.position.z);
+  document.getElementById("CameraZamount").value =
+    document.getElementById("CameraZInput").value;
 }
 
 function renderPointCloud() {
@@ -625,18 +635,18 @@ async function eventListeners() {
   document.getElementById("PC1").addEventListener("click", setFocusValue);
   document.getElementById("PC2").addEventListener("click", setFocusValue);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
-  document.getElementById("CameraXInput").addEventListener("input", setCamera);
-  document.getElementById("CameraYInput").addEventListener("input", setCamera);
-  document.getElementById("CameraZInput").addEventListener("input", setCamera);
+  document.getElementById("CameraXInput").addEventListener("input", setCameraX);
+  document.getElementById("CameraYInput").addEventListener("input", setCameraY);
+  document.getElementById("CameraZInput").addEventListener("input", setCameraZ);
   document
     .getElementById("CameraXamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraX);
   document
     .getElementById("CameraYamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraY);
   document
     .getElementById("CameraZamount")
-    .addEventListener("change", setCamera);
+    .addEventListener("change", setCameraZ);
   document.getElementById("PC1").addEventListener("click", renderLightField1);
   document.getElementById("PC2").addEventListener("click", renderLightField2);
   document

@@ -56,7 +56,6 @@ class FlyControls extends EventDispatcher {
       if (event.altKey) {
         return;
       }
-
       switch (event.code) {
         case "ShiftLeft":
         case "ShiftRight":
@@ -228,9 +227,17 @@ class FlyControls extends EventDispatcher {
         scope.dispatchEvent(_changeEvent);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
-        document.getElementById("CameraXamount").value = object.position.x;
-        document.getElementById("CameraYamount").value = object.position.y;
-        document.getElementById("CameraZamount").value = object.position.z;
+        document.getElementById("CameraXamount").value =
+          scope.object.position.x;
+        document.getElementById("CameraYamount").value =
+          scope.object.position.y;
+        document.getElementById("CameraZamount").value =
+          scope.object.position.z;
+        object.position.set(
+          scope.object.position.x,
+          scope.object.position.y,
+          scope.object.position.z
+        );
         object.updateProjectionMatrix();
       }
     };
