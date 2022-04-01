@@ -14,17 +14,7 @@
     />
     <script src="js/main.js" type="module"></script>
   </head>
-  <body onload="on()">
-    <div id="overlay">
-      <div class="versionselection">
-        <div class="button" onclick="off()">
-          <span class="buttonText">VERSION 1</span>
-        </div>
-        <div class="button" onclick="v2()">
-          <a class="buttonText">VERSION 2</a>
-        </div>
-      </div>
-    </div>
+  <body>
     <div class="versioning">
       <div class="button" onclick="v2()">
         <span class="buttonText">VERSION 1</span>
@@ -372,14 +362,6 @@
         e.addEventListener("input", () =>
           e.style.setProperty("--value", e.value)
         );
-      }
-
-      function on() {
-        document.getElementById("overlay").style.display = "block";
-      }
-
-      function off() {
-        document.getElementById("overlay").style.display = "none";
       }
     </script>
   </body>
