@@ -663,28 +663,6 @@ function setFocusValue() {
   }
 }
 
-function animation() {
-  let id = null;
-  const elem = document.getElementById("FocusInput");
-  document.getElementById("FocusInput").value = 10;
-  let pos = document.getElementById("FocusInput").value;
-  clearInterval(id);
-  id = setInterval(frame, 180);
-  function frame() {
-    if (pos == -20) {
-      clearInterval(id);
-    } else {
-      pos--;
-      elem.value = pos;
-      pos = document.getElementById("FocusInput").value;
-      document.getElementById("FocusInput").style.setProperty("--value", pos);
-      document.getElementById("Focusamount").value =
-        document.getElementById("FocusInput").value;
-      setFocus();
-    }
-  }
-}
-
 async function LF1(renderLightField1) {
   if (document.querySelector("#FOREST").classList.contains("clicked")) {
     renderLightField1();
@@ -794,7 +772,6 @@ async function LF3Pinhole() {
 }
 
 async function eventListeners() {
-  document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
