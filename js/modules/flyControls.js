@@ -227,12 +227,31 @@ class FlyControls extends EventDispatcher {
         scope.dispatchEvent(_changeEvent);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
+
         document.getElementById("CameraXamount").value =
           scope.object.position.x.toFixed(2);
+        document
+          .getElementById("CameraXInput")
+          .style.setProperty("--value", scope.object.position.x);
+        document.getElementById("CameraXInput").value =
+          document.getElementById("CameraXamount").value;
+
         document.getElementById("CameraYamount").value =
           scope.object.position.y.toFixed(2);
+        document
+          .getElementById("CameraYInput")
+          .style.setProperty("--value", scope.object.position.y);
+        document.getElementById("CameraYInput").value =
+          document.getElementById("CameraYamount").value;
+
         document.getElementById("CameraZamount").value =
           scope.object.position.z.toFixed(2);
+        document
+          .getElementById("CameraZInput")
+          .style.setProperty("--value", scope.object.position.z);
+        document.getElementById("CameraZInput").value =
+          document.getElementById("CameraZamount").value;
+
         object.position.set(
           scope.object.position.x,
           scope.object.position.y,

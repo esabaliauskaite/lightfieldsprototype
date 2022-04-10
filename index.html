@@ -22,9 +22,11 @@
     </div>
     <div id="scene"></div>
     <div class="buttons datasets">
-      <div id="PC2" class="button"><a class="buttonText">TUTORIAL</a></div>
+      <div id="TUTORIAL" class="button"><a class="buttonText">TUTORIAL</a></div>
       <br />
-      <div id="PC1" class="button"><a class="buttonText">FOREST</a></div>
+      <div id="FOREST" class="button"><a class="buttonText">FOREST</a></div>
+      <br />
+      <div id="CITY" class="button"><a class="buttonText">CITY</a></div>
       <br />
     </div>
     <div id="canvas">
@@ -207,32 +209,6 @@
           </div>
 
           <div class="optional">
-            <label for="CameraArray" id="showArray" class="labels title">
-              SHOW CAMERA ARRAY
-              <input
-                type="checkbox"
-                id="CameraArray"
-                name="CameraArray"
-                value="Array"
-              />
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div class="optional">
-            <label for="DebugView" id="showDebug" class="labels title"
-              >SHOW DEBUG VIEW
-              <input
-                type="checkbox"
-                id="DebugView"
-                name="DebugView"
-                value="DebugView"
-              />
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div class="optional">
             <label for="PCView" id="showPC" class="labels title"
               >SHOW POINT CLOUD VIEW
               <input type="checkbox" id="PCView" name="PCView" value="PCView" />
@@ -283,7 +259,7 @@
             Controls for camera, focus plane, pinhole view and aditional data.
           </p>
           <p class="text"><strong>Version 1: </strong> &nbsp;</p>
-          <p class="text">Switch to version 2.</p>
+          <p class="text">Press to switch to version 2.</p>
         </div>
       </div>
     </div>
@@ -340,6 +316,9 @@
         e.addEventListener("input", () =>
           e.style.setProperty("--value", e.value)
         );
+        e.addEventListener("keydown", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
 
       for (let e of document.querySelectorAll(
@@ -351,6 +330,9 @@
         e.addEventListener("input", () =>
           e.style.setProperty("--value", e.value)
         );
+        e.addEventListener("keydown", () =>
+          e.style.setProperty("--value", e.value)
+        );
       }
 
       for (let e of document.querySelectorAll(
@@ -360,6 +342,9 @@
         e.style.setProperty("--min", e.min == "" ? "0" : e.min);
         e.style.setProperty("--max", e.max == "" ? "10" : e.max);
         e.addEventListener("input", () =>
+          e.style.setProperty("--value", e.value)
+        );
+        e.addEventListener("keydown", () =>
           e.style.setProperty("--value", e.value)
         );
       }

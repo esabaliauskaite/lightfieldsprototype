@@ -8,7 +8,11 @@ import vertex from "./shaders/vertex.js";
 import fragment from "./shaders/fragment.js";
 import { cameraHelperArray } from "./modules/cameraHelperArray.js";
 import { FlyControls } from "./modules/flyControls.js";
-import { renderLightField1, renderLightField2 } from "./renderLF.js";
+import {
+  renderLightField1,
+  renderLightField2,
+  renderLightField3,
+} from "./renderLF.js";
 
 // # Debug Scene ##
 const imgURL = "./data/tutorial/";
@@ -17,18 +21,21 @@ const singleImageFov = 60; // degrees
 let debugply = "./data/tutorial/blender.ply";
 
 // # Forest Scene ##
-const ForestimgURL = "./data/forest_F5/";
-const ForestposeURL = "./data/forest_F5/poses.json";
-const ForestsingleImageFov = 35; // degrees
-let forest = "./data/forest_F5/F5.ply";
+const ForestimgURL = "./data/forest/";
+const ForestposeURL = "./data/forest/poses.json";
+const ForestsingleImageFov = 60; // degrees
+let forest = "./data/forest/forest.ply";
+
+// # City Scene ##
+const CityURL = "./data/city/";
+const CityPoseURL = "./data/city/city_poses.json";
+const CityingleImageFov = 35; // degrees
+let City = "./data/city/city.ply";
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
 let quat = new THREE.Quaternion();
 const demURL = "./data/zero_plane.obj";
-
-let forestImageLocations = [];
-let urbanImageLocations = [];
 
 const textureLoader = new THREE.TextureLoader();
 const loader = new OBJLoader();
@@ -61,11 +68,15 @@ const mainView = views.main;
 const debugView = views.debug;
 let scene, renderer, dem, demScene;
 let pointCloud = null;
-let singleImages = new Array();
+
 let singleImageMaterials = new Array();
 let ForestsingleImageMaterials = new Array();
+let CitySingleImageMaterials = new Array();
+
 let cameraArrayHelper = new Array();
 let ForestcameraArrayHelper = new Array();
+let CityCameraArrayHelper = new Array();
+
 let sceneGeometries = [];
 let rtTarget;
 let rtScene;
@@ -173,7 +184,6 @@ fetchPosesJSON(poseURL).then((poses) => {
     pos.z = pos.z;
 
     positions.push(pos);
-    urbanImageLocations.push(pos);
     const camera = new THREE.PerspectiveCamera(singleImageFov, 1.0, 0.5, 10000);
     camera.position.copy(pos);
     camera.applyQuaternion(quat);
@@ -189,7 +199,6 @@ fetchPosesJSON(poseURL).then((poses) => {
     scene.add(helper);
     helper.visible = false;
     cameraArrayHelper.push(helper);
-    singleImages.push(camera);
     scene.add(camera);
   }
 });
@@ -233,7 +242,6 @@ fetchPosesJSON(ForestposeURL).then((poses) => {
       pos.x = -pos.x;
     } else {
       pos.fromArray(pose.location);
-      forestImageLocations.push(pos);
       quat.x = pose.rotation[0];
       quat.y = pose.rotation[1];
       quat.z = pose.rotation[2];
@@ -263,7 +271,78 @@ fetchPosesJSON(ForestposeURL).then((poses) => {
     scene.add(helper);
     helper.visible = false;
     ForestcameraArrayHelper.push(helper);
-    singleImages.push(camera);
+    scene.add(camera);
+  }
+});
+
+fetchPosesJSON(CityPoseURL).then((poses) => {
+  if (!("images" in poses)) {
+    console.log(
+      `An error happened when loading JSON poses. Property images is not present.`
+    );
+  }
+  const positions = new Array();
+  for (const pose of poses.images) {
+    const useLegacy = !(
+      pose.hasOwnProperty("location") && pose.hasOwnProperty("rotation")
+    );
+    let pos = new THREE.Vector3();
+    let scale = new THREE.Vector3();
+
+    if (useLegacy) {
+      const M = pose.M3x4;
+      let matrix = new THREE.Matrix4();
+      matrix.set(
+        M[0][0],
+        M[0][1],
+        M[0][2],
+        M[0][3],
+        M[1][0],
+        M[1][1],
+        M[1][2],
+        M[1][3],
+        M[2][0],
+        M[2][1],
+        M[2][2],
+        M[2][3],
+        0,
+        0,
+        0,
+        1
+      );
+      matrix.decompose(pos, quat, scale);
+      pos.x = -pos.x;
+    } else {
+      pos.fromArray(pose.location);
+      quat.x = pose.rotation[0];
+      quat.y = pose.rotation[1];
+      quat.z = pose.rotation[2];
+      quat.w = pose.rotation[3];
+    }
+
+    //pos.z = -pos.z;
+    positions.push(pos);
+
+    const camera = new THREE.PerspectiveCamera(
+      CityingleImageFov,
+      1.0,
+      0.5,
+      10000
+    );
+    camera.position.copy(pos);
+    camera.applyQuaternion(quat);
+
+    let url = CityURL + pose.imagefile;
+    const tex = textureLoader.load(url);
+    const CitySingleImageMaterial = createProjectiveMaterial(camera, tex);
+    CitySingleImageMaterials.push(CitySingleImageMaterial);
+    if (dem) {
+      dem.material = CitySingleImageMaterial;
+    }
+    const helper = new cameraHelperArray(camera);
+    scene.add(helper);
+    helper.visible = false;
+    CityCameraArrayHelper.push(helper);
     scene.add(camera);
   }
 });
@@ -292,36 +371,6 @@ loader.load(
     console.log(`An error happened when loading ${demURL}`);
   }
 );
-
-function showCameraArray() {
-  if (document.getElementById("CameraArray").checked) {
-    if (document.querySelector("#PC2").classList.contains("clicked")) {
-      for (let i = 0; i < cameraArrayHelper.length; i++) {
-        cameraArrayHelper[i].visible = true;
-      }
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
-        ForestcameraArrayHelper[i].visible = false;
-      }
-    } else if (document.querySelector("#PC1").classList.contains("clicked")) {
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
-        ForestcameraArrayHelper[i].visible = true;
-      }
-      for (let i = 0; i < cameraArrayHelper.length; i++) {
-        cameraArrayHelper[i].visible = false;
-      }
-    }
-  } else {
-    if (document.querySelector("#PC2").classList.contains("clicked")) {
-      for (let i = 0; i < cameraArrayHelper.length; i++) {
-        cameraArrayHelper[i].visible = false;
-      }
-    } else {
-      for (let i = 0; i < ForestcameraArrayHelper.length; i++) {
-        ForestcameraArrayHelper[i].visible = false;
-      }
-    }
-  }
-}
 
 init();
 render();
@@ -398,7 +447,7 @@ function init() {
 
   document.body.appendChild(renderer.domElement);
 
-  document.getElementById("PC2").classList.add("clicked");
+  document.getElementById("TUTORIAL").classList.add("clicked");
 }
 
 function Resize() {
@@ -456,7 +505,7 @@ function setCameraZ() {
 }
 
 function renderPointCloud() {
-  if (document.getElementById("PC1").classList.contains("clicked")) {
+  if (document.getElementById("FOREST").classList.contains("clicked")) {
     if (pointCloud) {
       pointCloud.parent.remove(pointCloud);
     }
@@ -464,12 +513,14 @@ function renderPointCloud() {
       forest,
       function (geometry) {
         const material = new THREE.PointsMaterial({
-          size: 0.01,
+          size: 0.03,
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
-        mesh.rotation.z = -1.5;
-        mesh.rotation.y = -3.14159;
+        mesh.geometry.rotateY(3.14159);
+        mesh.geometry.rotateZ(4.71239);
+        mesh.geometry.translate(0, 1, 17.6);
+        mesh.geometry.scale(0.7, 0.7, 0.7);
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
@@ -487,7 +538,9 @@ function renderPointCloud() {
         console.log("An error happened");
       }
     );
-  } else if (document.getElementById("PC2").classList.contains("clicked")) {
+  } else if (
+    document.getElementById("TUTORIAL").classList.contains("clicked")
+  ) {
     if (pointCloud) {
       pointCloud.parent.remove(pointCloud);
     }
@@ -499,8 +552,47 @@ function renderPointCloud() {
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
-        mesh.rotation.y = -3;
-        mesh.rotation.z = -3;
+        mesh.geometry.scale(0.2, 0.2, 0.2);
+        mesh.geometry.rotateY(3.14159);
+        mesh.geometry.rotateZ(3.14159);
+        mesh.geometry.translate(0.5, 0.02, 0.5);
+        scene.add(mesh);
+        if (document.getElementById("PCView").checked == true) {
+          mesh.visible = true;
+        }
+        if (document.getElementById("PCView").checked == false) {
+          mesh.visible = false;
+        }
+
+        pointCloud = mesh;
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.log("An error happened");
+      }
+    );
+  } else if (document.getElementById("CITY").classList.contains("clicked")) {
+    if (pointCloud) {
+      pointCloud.parent.remove(pointCloud);
+    }
+    plyLoader.load(
+      City,
+      function (geometry) {
+        const material = new THREE.PointsMaterial({
+          size: 0.01,
+          vertexColors: true,
+        });
+        const mesh = new THREE.Points(geometry, material);
+        mesh.geometry.scale(3.0, 3.0, 1.0);
+        mesh.geometry.rotateY(3.14159);
+        mesh.geometry.rotateZ(3.14159);
+        mesh.geometry.translate(
+          0.136980056762695,
+          10.69098663330078,
+          72.60655975341797
+        );
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
@@ -522,15 +614,52 @@ function renderPointCloud() {
 }
 
 function setFocusValue() {
-  if (document.querySelector("#PC1").classList.contains("clicked")) {
+  if (document.querySelector("#TUTORIAL").classList.contains("clicked")) {
     dem.position.z = -4;
-    document.getElementById("Focusamount").value = dem.position.z;
     document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+    mainCamera.position.z = 20.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
   }
-  if (document.querySelector("#PC2").classList.contains("clicked")) {
-    dem.position.z = -11;
-    document.getElementById("Focusamount").value = dem.position.z;
+  if (document.querySelector("#FOREST").classList.contains("clicked")) {
+    dem.position.z = 2;
     document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+
+    mainCamera.position.z = 20.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
+  }
+  if (document.querySelector("#CITY").classList.contains("clicked")) {
+    dem.position.z = -25;
+    document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+
+    mainCamera.position.z = 75.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 75.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
   }
 }
 
@@ -557,7 +686,7 @@ function animation() {
 }
 
 async function LF1(renderLightField1) {
-  if (document.querySelector("#PC1").classList.contains("clicked")) {
+  if (document.querySelector("#FOREST").classList.contains("clicked")) {
     renderLightField1();
     for (let i = 0; i < ForestsingleImageMaterials.length; i++) {
       dem.material = ForestsingleImageMaterials[i];
@@ -567,7 +696,7 @@ async function LF1(renderLightField1) {
 }
 
 async function LF2(renderLightField2) {
-  if (document.querySelector("#PC2").classList.contains("clicked")) {
+  if (document.querySelector("#TUTORIAL").classList.contains("clicked")) {
     renderLightField2();
     for (let i = 0; i < singleImageMaterials.length; i++) {
       dem.material = singleImageMaterials[i];
@@ -576,9 +705,19 @@ async function LF2(renderLightField2) {
   }
 }
 
+async function LF3(renderLightField3) {
+  if (document.querySelector("#CITY").classList.contains("clicked")) {
+    renderLightField3();
+    for (let i = 0; i < CitySingleImageMaterials.length; i++) {
+      dem.material = CitySingleImageMaterials[i];
+      renderer.render(rtScene, views.main.camera);
+    }
+  }
+}
+
 async function LF1Pinhole() {
   if (
-    document.querySelector("#PC1").classList.contains("clicked") &&
+    document.querySelector("#FOREST").classList.contains("clicked") &&
     document.getElementById("PinholeView").checked
   ) {
     renderer.clear();
@@ -604,7 +743,7 @@ async function LF1Pinhole() {
 
 async function LF2Pinhole() {
   if (
-    document.querySelector("#PC2").classList.contains("clicked") &&
+    document.querySelector("#TUTORIAL").classList.contains("clicked") &&
     document.getElementById("PinholeView").checked
   ) {
     renderer.clear();
@@ -628,12 +767,36 @@ async function LF2Pinhole() {
   }
 }
 
+async function LF3Pinhole() {
+  if (
+    document.querySelector("#CITY").classList.contains("clicked") &&
+    document.getElementById("PinholeView").checked
+  ) {
+    renderer.clear();
+    mainCamera.fov = CityingleImageFov;
+    document.getElementById("PinholeInput").min = 0;
+    document.getElementById("PinholeInput").max =
+      CitySingleImageMaterials.length - 1;
+    dem.material =
+      CitySingleImageMaterials[document.getElementById("PinholeInput").value];
+    renderer.render(rtScene, mainCamera);
+    for (let e of document.querySelectorAll(
+      'input[type="range"].styled-slider'
+    )) {
+      e.style.setProperty("--value", e.value);
+      e.style.setProperty("--min", e.min == "" ? "-100" : e.min);
+      e.style.setProperty("--max", e.max == "" ? "100" : e.max);
+      e.addEventListener("input", () =>
+        e.style.setProperty("--value", e.value)
+      );
+    }
+  }
+}
+
 async function eventListeners() {
   document.getElementById("Ani").addEventListener("click", animation);
   document.getElementById("FocusInput").addEventListener("input", setFocus);
   document.getElementById("Focusamount").addEventListener("change", setFocus);
-  document.getElementById("PC1").addEventListener("click", setFocusValue);
-  document.getElementById("PC2").addEventListener("click", setFocusValue);
   document.getElementById("FOVAmount").addEventListener("input", setFOV);
   document.getElementById("CameraXInput").addEventListener("input", setCameraX);
   document.getElementById("CameraYInput").addEventListener("input", setCameraY);
@@ -647,12 +810,16 @@ async function eventListeners() {
   document
     .getElementById("CameraZamount")
     .addEventListener("change", setCameraZ);
-  document.getElementById("PC1").addEventListener("click", renderLightField1);
-  document.getElementById("PC2").addEventListener("click", renderLightField2);
   document
-    .getElementById("CameraArray")
-    .addEventListener("change", showCameraArray);
-  showCameraArray();
+    .getElementById("FOREST")
+    .addEventListener("click", renderLightField1);
+  document
+    .getElementById("TUTORIAL")
+    .addEventListener("click", renderLightField2);
+  document.getElementById("CITY").addEventListener("click", renderLightField3);
+  document.getElementById("FOREST").addEventListener("click", setFocusValue);
+  document.getElementById("TUTORIAL").addEventListener("click", setFocusValue);
+  document.getElementById("CITY").addEventListener("click", setFocusValue);
   document.getElementById("PCView").addEventListener("click", renderPointCloud);
 }
 
@@ -669,8 +836,10 @@ function render() {
 
   LF1(renderLightField1);
   LF2(renderLightField2);
+  LF3(renderLightField3);
   LF1Pinhole();
   LF2Pinhole();
+  LF3Pinhole();
 
   renderer.setRenderTarget(null);
 
@@ -691,25 +860,4 @@ function render() {
   mainCamera.aspect = width / height;
   mainCamera.updateProjectionMatrix();
   renderer.render(scene, mainCamera);
-
-  if (document.querySelector("#DebugView").checked) {
-    axesHelper.visible = true;
-    cameraHelper.visible = true;
-    renderer.autoClear = false;
-
-    const debugleft = Math.floor(windowWidth * debugView.left);
-    const debugbottom = Math.floor(windowHeight * debugView.bottom);
-    const debugwidth = Math.floor(windowWidth * debugView.width);
-    const debugheight = Math.floor(windowHeight * debugView.height);
-
-    renderer.setViewport(debugleft, debugbottom, debugwidth, debugheight);
-    renderer.setScissor(debugleft, debugbottom, debugwidth, debugheight);
-    renderer.setScissorTest(true);
-    renderer.setClearColor(debugbgColor, 1);
-    renderer.clear();
-
-    debugCamera.aspect = debugView.width / debugView.height;
-    debugCamera.updateProjectionMatrix();
-    renderer.render(scene, debugCamera);
-  }
 }

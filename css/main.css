@@ -187,7 +187,7 @@ div .slider {
   position: fixed;
   z-index: 1;
   bottom: 3%;
-  right: 35%;
+  right: 30%;
 }
 
 .button {
@@ -346,7 +346,7 @@ div .slider {
 
 .versioning {
   position: fixed;
-  bottom: 2%;
+  bottom: 5%;
   left: 2%;
 }
 
