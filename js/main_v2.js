@@ -83,6 +83,9 @@ let rtScene;
 let mainCamera, debugCamera, mainControls;
 let axesHelper, cameraHelper;
 let windowWidth, windowHeight;
+let url = new URL(window.location);
+let searchParams = new URLSearchParams(url.search);
+let currentScene = searchParams.get("scene");
 
 function createProjectiveMaterial(projCamera, tex = null) {
   var material = new THREE.ShaderMaterial({
@@ -512,6 +515,8 @@ function renderPointCloud() {
     plyLoader.load(
       forest,
       function (geometry) {
+        document.getElementById("loadedScene").style.display = "block";
+        document.getElementById("loader").style.display = "none";
         const material = new THREE.PointsMaterial({
           size: 0.03,
           vertexColors: true,
@@ -533,6 +538,8 @@ function renderPointCloud() {
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("loadedScene").style.display = "none";
       },
       function (error) {
         console.log("An error happened");
@@ -547,6 +554,8 @@ function renderPointCloud() {
     plyLoader.load(
       debugply,
       function (geometry) {
+        document.getElementById("loadedScene").style.display = "block";
+        document.getElementById("loader").style.display = "none";
         const material = new THREE.PointsMaterial({
           size: 0.01,
           vertexColors: true,
@@ -568,6 +577,8 @@ function renderPointCloud() {
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("loadedScene").style.display = "none";
       },
       function (error) {
         console.log("An error happened");
@@ -580,6 +591,8 @@ function renderPointCloud() {
     plyLoader.load(
       City,
       function (geometry) {
+        document.getElementById("loadedScene").style.display = "block";
+        document.getElementById("loader").style.display = "none";
         const material = new THREE.PointsMaterial({
           size: 0.01,
           vertexColors: true,
@@ -605,61 +618,13 @@ function renderPointCloud() {
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("loadedScene").style.display = "none";
       },
       function (error) {
         console.log("An error happened");
       }
     );
-  }
-}
-
-function setFocusValue() {
-  if (document.querySelector("#TUTORIAL").classList.contains("clicked")) {
-    dem.position.z = -4;
-    document.getElementById("FocusInput").value = dem.position.z;
-    demScene.position.z = dem.position.z;
-    document
-      .getElementById("FocusInput")
-      .style.setProperty("--value", dem.position.z);
-    document.getElementById("Focusamount").value =
-      document.getElementById("FocusInput").value;
-    mainCamera.position.z = 20.0;
-    document.getElementById("CameraZInput").value = mainCamera.position.z;
-    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
-    document.getElementById("CameraZamount").value =
-      document.getElementById("CameraZInput").value;
-  }
-  if (document.querySelector("#FOREST").classList.contains("clicked")) {
-    dem.position.z = 2;
-    document.getElementById("FocusInput").value = dem.position.z;
-    demScene.position.z = dem.position.z;
-    document
-      .getElementById("FocusInput")
-      .style.setProperty("--value", dem.position.z);
-    document.getElementById("Focusamount").value =
-      document.getElementById("FocusInput").value;
-
-    mainCamera.position.z = 20.0;
-    document.getElementById("CameraZInput").value = mainCamera.position.z;
-    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
-    document.getElementById("CameraZamount").value =
-      document.getElementById("CameraZInput").value;
-  }
-  if (document.querySelector("#CITY").classList.contains("clicked")) {
-    dem.position.z = -25;
-    document.getElementById("FocusInput").value = dem.position.z;
-    demScene.position.z = dem.position.z;
-    document
-      .getElementById("FocusInput")
-      .style.setProperty("--value", dem.position.z);
-    document.getElementById("Focusamount").value =
-      document.getElementById("FocusInput").value;
-
-    mainCamera.position.z = 75.0;
-    document.getElementById("CameraZInput").value = mainCamera.position.z;
-    document.getElementById("CameraZInput").style.setProperty("--value", 75.0);
-    document.getElementById("CameraZamount").value =
-      document.getElementById("CameraZInput").value;
   }
 }
 
@@ -794,15 +759,96 @@ async function eventListeners() {
     .getElementById("TUTORIAL")
     .addEventListener("click", renderLightField2);
   document.getElementById("CITY").addEventListener("click", renderLightField3);
-  document.getElementById("FOREST").addEventListener("click", setFocusValue);
-  document.getElementById("TUTORIAL").addEventListener("click", setFocusValue);
-  document.getElementById("CITY").addEventListener("click", setFocusValue);
+  document.getElementById("FOREST").addEventListener("click", setValues);
+  document.getElementById("TUTORIAL").addEventListener("click", setValues);
+  document.getElementById("CITY").addEventListener("click", setValues);
+  window.addEventListener("load", setFullValues);
   document.getElementById("PCView").addEventListener("click", renderPointCloud);
+}
+
+function setValues() {
+  if (document.querySelector("#TUTORIAL").classList.contains("clicked")) {
+    window.location.search = "?scene=Tutorial";
+  }
+  if (document.querySelector("#FOREST").classList.contains("clicked")) {
+    window.location.search = "?scene=Forest";
+  }
+  if (document.querySelector("#CITY").classList.contains("clicked")) {
+    window.location.search = "?scene=City";
+  }
+}
+
+function setFullValues() {
+  if (currentScene == "Tutorial") {
+    document.getElementById("PCView").checked = false;
+    document.getElementById("PinholeView").checked = false;
+    dem.position.z = -4;
+    document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+    mainCamera.position.z = 20.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
+  } else if (currentScene == "Forest") {
+    document.getElementById("PCView").checked = false;
+    document.getElementById("PinholeView").checked = false;
+
+    dem.position.z = 0;
+    document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+
+    mainCamera.position.z = 20.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
+  } else if (currentScene == "City") {
+    document.getElementById("PCView").checked = false;
+    document.getElementById("PinholeView").checked = false;
+
+    dem.position.z = -25;
+    document.getElementById("FocusInput").value = dem.position.z;
+    demScene.position.z = dem.position.z;
+    document
+      .getElementById("FocusInput")
+      .style.setProperty("--value", dem.position.z);
+    document.getElementById("Focusamount").value =
+      document.getElementById("FocusInput").value;
+
+    mainCamera.position.z = 75.0;
+    document.getElementById("CameraZInput").value = mainCamera.position.z;
+    document.getElementById("CameraZInput").style.setProperty("--value", 75.0);
+    document.getElementById("CameraZamount").value =
+      document.getElementById("CameraZInput").value;
+  }
+}
+
+function URLParameters() {
+  if (currentScene == "Tutorial") {
+    renderLightField2();
+  } else if (currentScene == "Forest") {
+    renderLightField1();
+  } else if (currentScene == "City") {
+    renderLightField3();
+  } else {
+    renderLightField2();
+  }
 }
 
 function render() {
   requestAnimationFrame(render);
-  mainControls.update(0.5);
+  mainControls.update(0.1);
   Resize();
   eventListeners();
 
@@ -810,6 +856,8 @@ function render() {
   renderer.setRenderTarget(rtTarget);
   renderer.setClearColor(new THREE.Color(0), 0);
   renderer.clear();
+
+  URLParameters();
 
   LF1(renderLightField1);
   LF2(renderLightField2);

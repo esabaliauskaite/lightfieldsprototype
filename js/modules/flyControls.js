@@ -62,10 +62,10 @@ class FlyControls extends EventDispatcher {
           this.movementSpeedMultiplier = 0.1;
           break;
 
-        case "KeyW":
+        case "KeyR":
           this.moveState.forward = 1;
           break;
-        case "KeyS":
+        case "KeyF":
           this.moveState.back = 1;
           break;
 
@@ -76,10 +76,10 @@ class FlyControls extends EventDispatcher {
           this.moveState.right = 1;
           break;
 
-        case "KeyR":
+        case "KeyW":
           this.moveState.up = 1;
           break;
-        case "KeyF":
+        case "KeyS":
           this.moveState.down = 1;
           break;
 
@@ -109,10 +109,10 @@ class FlyControls extends EventDispatcher {
           this.movementSpeedMultiplier = 1;
           break;
 
-        case "KeyW":
+        case "KeyR":
           this.moveState.forward = 0;
           break;
-        case "KeyS":
+        case "KeyF":
           this.moveState.back = 0;
           break;
 
@@ -123,10 +123,10 @@ class FlyControls extends EventDispatcher {
           this.moveState.right = 0;
           break;
 
-        case "KeyR":
+        case "KeyW":
           this.moveState.up = 0;
           break;
-        case "KeyF":
+        case "KeyS":
           this.moveState.down = 0;
           break;
 

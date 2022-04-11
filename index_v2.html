@@ -9,277 +9,292 @@
     <script src="js/main_v2.js" type="module"></script>
   </head>
   <body>
-    <div class="versioning">
-      <div class="button" onclick="v1()">
-        <span class="buttonText">VERSION 2</span>
-      </div>
-    </div>
-    <div id="canvas">
-      <div class="menubtn">
-        <div class="controlsbtn button" onclick="onClick()">
-          <span class="buttonText">CONTROLS</span>
-        </div>
-        <div class="insbtn button">
-          <a class="buttonText" onclick="onClickIns()">INSTRUCTIONS</a>
-        </div>
-        <div class="resetbtn button">
-          <a class="buttonText" onclick="reload()">RESET</a>
+    <div id="loader"></div>
+    <div id="loadedScene">
+      <div class="versioning">
+        <div class="button" onclick="v1()">
+          <span class="buttonText">VERSION 2</span>
         </div>
       </div>
-      <div class="GUI">
-        <div class="closeicon" onclick="onClickClose()">
-          <img src="svg/close.svg" alt="close" class="icons close" />
-          <span class="close">CLOSE</span>
-        </div>
-        <div class="menu">
-          <div class="block">
-            <p class="title">
-              <img
-                src="svg/camera.svg"
-                alt="close"
-                class="functionalities"
-              />CAMERA POSITION
-            </p>
-
-            <div class="slider">
-              <p class="text">X</p>
-              <input
-                id="CameraXInput"
-                type="range"
-                min="-200"
-                max="200"
-                step="0.1"
-                class="CameraSlidersSize styled-slider-cameraX slider-progress"
-                oninput="CameraXamount.value=CameraXInput.value"
-              />
-              <input
-                id="CameraXamount"
-                class="TextInput"
-                type="number"
-                oninput="CameraXInput.value=CameraXamount.value"
-              />
-            </div>
-
-            <div class="slider">
-              <p class="text">Y</p>
-              <input
-                id="CameraYInput"
-                type="range"
-                min="-200"
-                max="200"
-                step="0.1"
-                class="CameraSlidersSize styled-slider-cameraY slider-progress"
-                oninput="CameraYamount.value=CameraYInput.value"
-              />
-              <input
-                id="CameraYamount"
-                class="TextInput"
-                type="number"
-                oninput="CameraYInput.value=CameraYamount.value"
-              />
-            </div>
-            <div class="slider">
-              <p class="text">Z</p>
-              <input
-                id="CameraZInput"
-                type="range"
-                min="-200"
-                max="200"
-                step="0.1"
-                value="20"
-                class="CameraSlidersSize styled-slider-cameraZ slider-progress"
-                oninput="CameraZamount.value=CameraZInput.value"
-              />
-              <input
-                id="CameraZamount"
-                class="TextInput"
-                type="number"
-                oninput="CameraZInput.value=CameraZamount.value"
-              />
-            </div>
+      <div id="canvas">
+        <div class="menubtn">
+          <div class="controlsbtn button" onclick="onClick()">
+            <span class="buttonText">CONTROLS</span>
           </div>
+          <div class="insbtn button">
+            <a class="buttonText" onclick="onClickIns()">INSTRUCTIONS</a>
+          </div>
+          <div class="resetbtn button">
+            <a class="buttonText" onclick="reload()">RESET</a>
+          </div>
+        </div>
+        <div class="GUI">
+          <div class="closeicon" onclick="onClickClose()">
+            <img src="svg/close.svg" alt="close" class="icons close" />
+            <span class="close">CLOSE</span>
+          </div>
+          <div class="menu">
+            <div class="block">
+              <p class="title">
+                <img
+                  src="svg/camera.svg"
+                  alt="close"
+                  class="functionalities"
+                />CAMERA POSITION
+              </p>
 
-          <div class="block">
-            <p class="title">
-              <img
-                src="svg/camera.svg"
-                alt="close"
-                class="functionalities"
-              />CAMERA ORIENTATION
-            </p>
-            <div class="slider">
               <div class="slider">
                 <p class="text">X</p>
                 <input
-                  id="CameraOrrientationX"
+                  id="CameraXInput"
+                  type="range"
+                  min="-200"
+                  max="200"
+                  step="0.1"
+                  class="CameraSlidersSize styled-slider-cameraX slider-progress"
+                  oninput="CameraXamount.value=CameraXInput.value"
+                />
+                <input
+                  id="CameraXamount"
+                  class="TextInput"
                   type="number"
-                  step="0.5"
-                  class="greyedOut"
-                  readonly
+                  oninput="CameraXInput.value=CameraXamount.value"
                 />
               </div>
+
               <div class="slider">
                 <p class="text">Y</p>
                 <input
-                  id="CameraOrrientationY"
+                  id="CameraYInput"
+                  type="range"
+                  min="-200"
+                  max="200"
+                  step="0.1"
+                  class="CameraSlidersSize styled-slider-cameraY slider-progress"
+                  oninput="CameraYamount.value=CameraYInput.value"
+                />
+                <input
+                  id="CameraYamount"
+                  class="TextInput"
                   type="number"
-                  step="0.5"
-                  class="greyedOut"
-                  readonly
+                  oninput="CameraYInput.value=CameraYamount.value"
                 />
               </div>
               <div class="slider">
                 <p class="text">Z</p>
                 <input
-                  id="CameraOrrientationZ"
+                  id="CameraZInput"
+                  type="range"
+                  min="-200"
+                  max="200"
+                  step="0.1"
+                  value="20"
+                  class="CameraSlidersSize styled-slider-cameraZ slider-progress"
+                  oninput="CameraZamount.value=CameraZInput.value"
+                />
+                <input
+                  id="CameraZamount"
+                  class="TextInput"
                   type="number"
-                  step="0.5"
-                  class="greyedOut"
-                  readonly
+                  oninput="CameraZInput.value=CameraZamount.value"
                 />
               </div>
             </div>
-          </div>
 
-          <div class="block">
-            <p class="title">
-              <img
-                src="svg/focus.svg"
-                alt="close"
-                class="functionalities"
-              />FOCUS
-            </p>
-            <div class="slider">
-              <input
-                id="FocusInput"
-                type="range"
-                min="-200"
-                max="200"
-                class="slidersSize styled-slider slider-progress"
-                oninput="Focusamount.value=FocusInput.value"
-              />
-              <input
-                id="Focusamount"
-                type="number"
-                min="-20"
-                max="0"
-                class="TextInput"
-                oninput="FocusInput.value=Focusamount.value"
-              />
+            <div class="block">
+              <p class="title">
+                <img
+                  src="svg/camera.svg"
+                  alt="close"
+                  class="functionalities"
+                />CAMERA ORIENTATION
+              </p>
+              <div class="slider">
+                <div class="slider">
+                  <p class="text">X</p>
+                  <input
+                    id="CameraOrrientationX"
+                    type="number"
+                    step="0.5"
+                    class="greyedOut"
+                    readonly
+                  />
+                </div>
+                <div class="slider">
+                  <p class="text">Y</p>
+                  <input
+                    id="CameraOrrientationY"
+                    type="number"
+                    step="0.5"
+                    class="greyedOut"
+                    readonly
+                  />
+                </div>
+                <div class="slider">
+                  <p class="text">Z</p>
+                  <input
+                    id="CameraOrrientationZ"
+                    type="number"
+                    step="0.5"
+                    class="greyedOut"
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="block">
+              <p class="title">
+                <img
+                  src="svg/focus.svg"
+                  alt="close"
+                  class="functionalities"
+                />FOCUS
+              </p>
+              <div class="slider">
+                <input
+                  id="FocusInput"
+                  type="range"
+                  min="-200"
+                  max="200"
+                  class="slidersSize styled-slider slider-progress"
+                  oninput="Focusamount.value=FocusInput.value"
+                />
+                <input
+                  id="Focusamount"
+                  type="number"
+                  class="TextInput"
+                  oninput="FocusInput.value=Focusamount.value"
+                />
+              </div>
+            </div>
+
+            <div class="FOV block">
+              <img src="svg/fov.svg" alt="close" class="functionalities" />
+              <p class="title">CURRENT FIELD OF VIEW</p>
+              <div class="slider">
+                <input
+                  id="FOVAmount"
+                  type="number"
+                  min="10"
+                  class="TextInput"
+                />
+              </div>
+            </div>
+            <br />
+
+            <div class="block pinhole">
+              <label
+                for="PinholeView"
+                id="showPinholeView"
+                class="labels title"
+              >
+                <img
+                  src="svg/aperture.svg"
+                  alt="close"
+                  class="functionalities"
+                />
+                PINHOLE VIEW
+                <input
+                  type="checkbox"
+                  id="PinholeView"
+                  name="PinholeView"
+                  value="Array"
+                  onClick="toggleVisibility()"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <div id="pinholeslider" class="slider">
+                <input
+                  id="PinholeInput"
+                  type="range"
+                  min="0"
+                  max="400"
+                  value="0"
+                  class="slidersSize styled-slider slider-progress"
+                  oninput="PinholeAmount.value=PinholeInput.value"
+                />
+                <input
+                  id="PinholeAmount"
+                  type="number"
+                  min="0"
+                  max="400"
+                  value="0"
+                  class="TextInput"
+                  oninput="PinholeInput.value=PinholeAmount.value"
+                />
+              </div>
+            </div>
+
+            <div class="optional">
+              <label for="PCView" id="showPC" class="labels title"
+                >SHOW POINT CLOUD VIEW
+                <input
+                  type="checkbox"
+                  id="PCView"
+                  name="PCView"
+                  value="PCView"
+                />
+                <span class="checkmark"></span>
+              </label>
             </div>
           </div>
-
-          <div class="FOV block">
-            <img src="svg/fov.svg" alt="close" class="functionalities" />
-            <p class="title">CURRENT FIELD OF VIEW</p>
-            <div class="slider">
-              <input
-                id="FOVAmount"
-                type="number"
-                min="-100"
-                max="100"
-                class="TextInput"
-              />
-            </div>
+        </div>
+        <div class="buttons datasets">
+          <div id="TUTORIAL" class="button">
+            <a class="buttonText">TUTORIAL</a>
           </div>
           <br />
-
-          <div class="block pinhole">
-            <label for="PinholeView" id="showPinholeView" class="labels title">
-              <img src="svg/aperture.svg" alt="close" class="functionalities" />
-              PINHOLE VIEW
-              <input
-                type="checkbox"
-                id="PinholeView"
-                name="PinholeView"
-                value="Array"
-                onClick="toggleVisibility()"
-              />
-              <span class="checkmark"></span>
-            </label>
-            <div id="pinholeslider" class="slider">
-              <input
-                id="PinholeInput"
-                type="range"
-                min="0"
-                max="400"
-                value="0"
-                class="slidersSize styled-slider slider-progress"
-                oninput="PinholeAmount.value=PinholeInput.value"
-              />
-              <input
-                id="PinholeAmount"
-                type="number"
-                min="0"
-                max="400"
-                value="0"
-                class="TextInput"
-                oninput="PinholeInput.value=PinholeAmount.value"
-              />
+          <div id="FOREST" class="button"><a class="buttonText">FOREST</a></div>
+          <br />
+          <div id="CITY" class="button"><a class="buttonText">CITY</a></div>
+          <br />
+        </div>
+        <div class="GUIIns">
+          <div class="closeicon" onclick="onClickInsClose()">
+            <img src="svg/close.svg" alt="close" class="icons close" />
+            <span class="close">CLOSE</span>
+          </div>
+          <div class="block menu">
+            <p class="title">INSTRUCTIONS</p>
+            <div class="optional">
+              <img src="svg/Z.svg" alt="move" class="instructions" />
+              <p class="text">W and S keys to move camera in Y direction</p>
+            </div>
+            <div class="optional">
+              <img src="svg/X.svg" alt="move" class="instructions" />
+              <p class="text">A and D keys to move camera in X direction</p>
+            </div>
+            <div class="optional">
+              <img src="svg/up.down.svg" alt="up" class="instructions" />
+              <p class="text">R and F keys to move camera in Z direction</p>
+            </div>
+            <div class="optional">
+              <img src="svg/pitch.svg" alt="pitch" class="instructions extra" />
+              <p class="text">
+                Up and down arrow keys to rotate camera in X direction
+              </p>
+            </div>
+            <div class="optional">
+              <img src="svg/yaw.svg" alt="yaw" class="instructions" />
+              <p class="text">
+                Left and right arrow keys to rotate camera in Y direction
+              </p>
             </div>
           </div>
-
-          <div class="optional">
-            <label for="PCView" id="showPC" class="labels title"
-              >SHOW POINT CLOUD VIEW
-              <input type="checkbox" id="PCView" name="PCView" value="PCView" />
-              <span class="checkmark"></span>
-            </label>
+          <div class="block menu">
+            <p class="title">FUNCTIONALITIES</p>
+            <p class="text">
+              <strong>Reset: </strong>
+            </p>
+            <p class="text">Resets everything to initial state.</p>
+            <p class="text"><strong>Controls: </strong> &nbsp;</p>
+            <p class="text">
+              Controls for camera, focus plane, pinhole view and aditional data.
+            </p>
+            <p class="text"><strong>Version 2: </strong> &nbsp;</p>
+            <p class="text">Press to switch to version 1.</p>
           </div>
-        </div>
-      </div>
-      <div class="buttons datasets">
-        <div id="TUTORIAL" class="button">
-          <a class="buttonText">TUTORIAL</a>
-        </div>
-        <br />
-        <div id="FOREST" class="button"><a class="buttonText">FOREST</a></div>
-        <br />
-        <div id="CITY" class="button"><a class="buttonText">CITY</a></div>
-        <br />
-      </div>
-      <div class="GUIIns">
-        <div class="closeicon" onclick="onClickInsClose()">
-          <img src="svg/close.svg" alt="close" class="icons close" />
-          <span class="close">CLOSE</span>
-        </div>
-        <div class="block menu">
-          <p class="title">INSTRUCTIONS</p>
-          <div class="optional">
-            <img src="svg/move.svg" alt="move" class="instructions" />
-            <p class="text">W, A, S, D keys to move</p>
-          </div>
-          <div class="optional">
-            <img src="svg/up.down.svg" alt="up" class="instructions" />
-            <p class="text">R and F keys to move up and down</p>
-          </div>
-          <div class="optional">
-            <img src="svg/pitch.svg" alt="pitch" class="instructions" />
-            <p class="text">Up and down arrow keys to pitch the camera</p>
-          </div>
-          <div class="optional">
-            <img src="svg/yaw.svg" alt="yaw" class="instructions" />
-            <p class="text">Left and right arrow keys to yaw the camera</p>
-          </div>
-        </div>
-        <div class="block menu">
-          <p class="title">FUNCTIONALITIES</p>
-          <p class="text">
-            <strong>Animate: </strong>
-          </p>
-          <p class="text">
-            Start animation for focus values. Values go from -4 to -15.
-          </p>
-          <p class="text">
-            <strong>Reset: </strong>
-          </p>
-          <p class="text">Resets everything to initial state.</p>
-          <p class="text"><strong>Controls: </strong> &nbsp;</p>
-          <p class="text">
-            Controls for camera, focus plane, pinhole view and aditional data.
-          </p>
-          <p class="text"><strong>Version 2: </strong> &nbsp;</p>
-          <p class="text">Press to switch to version 1.</p>
         </div>
       </div>
     </div>
