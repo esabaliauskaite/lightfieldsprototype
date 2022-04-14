@@ -608,7 +608,7 @@ function renderPointCloud() {
         mesh.geometry.scale(20.0, 20.0, 1.0);
         mesh.geometry.rotateY(3.14159);
         mesh.geometry.rotateZ(3.14159);
-        mesh.geometry.translate(195.0, -35.0, 5.0);
+        mesh.geometry.translate(115.0, -25.0, 0.0);
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
