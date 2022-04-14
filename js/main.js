@@ -23,7 +23,7 @@ let debugply = "./data/tutorial/blender.ply";
 // # Forest Scene ##
 const ForestimgURL = "./data/forest/";
 const ForestposeURL = "./data/forest/poses.json";
-const ForestsingleImageFov = 60; // degrees
+const ForestsingleImageFov = 35; // degrees
 let forest = "./data/forest/forest.ply";
 
 // # City Scene ##
@@ -532,8 +532,7 @@ function renderPointCloud() {
         const mesh = new THREE.Points(geometry, material);
         mesh.geometry.rotateY(3.14159);
         mesh.geometry.rotateZ(4.71239);
-        mesh.geometry.translate(0, 1, 17.6);
-        mesh.geometry.scale(0.7, 0.7, 0.7);
+        mesh.geometry.translate(-2.0, -3.0, 7.0);
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
@@ -606,14 +605,10 @@ function renderPointCloud() {
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
-        mesh.geometry.scale(3.0, 3.0, 1.0);
+        mesh.geometry.scale(20.0, 20.0, 1.0);
         mesh.geometry.rotateY(3.14159);
         mesh.geometry.rotateZ(3.14159);
-        mesh.geometry.translate(
-          0.136980056762695,
-          10.69098663330078,
-          72.60655975341797
-        );
+        mesh.geometry.translate(195.0, -35.0, 5.0);
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
@@ -647,6 +642,7 @@ function setValues() {
     window.location.search = "?scene=City";
   }
 }
+
 function setFullValues() {
   if (currentScene == "Tutorial") {
     document.getElementById("PCView").checked = false;
@@ -664,11 +660,14 @@ function setFullValues() {
     document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
     document.getElementById("CameraZamount").value =
       document.getElementById("CameraZInput").value;
+    mainCamera.fov = 60;
+    document.getElementById("FOVAmount").value = mainCamera.fov;
+    mainCamera.updateProjectionMatrix();
   } else if (currentScene == "Forest") {
     document.getElementById("PCView").checked = false;
     document.getElementById("PinholeView").checked = false;
 
-    dem.position.z = 0;
+    dem.position.z = -7;
     document.getElementById("FocusInput").value = dem.position.z;
     demScene.position.z = dem.position.z;
     document
@@ -682,11 +681,14 @@ function setFullValues() {
     document.getElementById("CameraZInput").style.setProperty("--value", 20.0);
     document.getElementById("CameraZamount").value =
       document.getElementById("CameraZInput").value;
+    mainCamera.fov = 43.8;
+    document.getElementById("FOVAmount").value = mainCamera.fov;
+    mainCamera.updateProjectionMatrix();
   } else if (currentScene == "City") {
     document.getElementById("PCView").checked = false;
     document.getElementById("PinholeView").checked = false;
 
-    dem.position.z = -25;
+    dem.position.z = -45;
     document.getElementById("FocusInput").value = dem.position.z;
     demScene.position.z = dem.position.z;
     document
@@ -695,11 +697,24 @@ function setFullValues() {
     document.getElementById("Focusamount").value =
       document.getElementById("FocusInput").value;
 
-    mainCamera.position.z = 75.0;
+    mainCamera.position.z = 300.0;
     document.getElementById("CameraZInput").value = mainCamera.position.z;
-    document.getElementById("CameraZInput").style.setProperty("--value", 75.0);
+    document.getElementById("CameraZInput").style.setProperty("--value", 300.0);
     document.getElementById("CameraZamount").value =
       document.getElementById("CameraZInput").value;
+    mainCamera.position.y = -33.0;
+    document.getElementById("CameraYInput").value = mainCamera.position.y;
+    document.getElementById("CameraYInput").style.setProperty("--value", -33.0);
+    document.getElementById("CameraYamount").value =
+      document.getElementById("CameraZInput").value;
+    mainCamera.position.x = 137.0;
+    document.getElementById("CameraYInput").value = mainCamera.position.y;
+    document.getElementById("CameraYInput").style.setProperty("--value", 137.0);
+    document.getElementById("CameraYamount").value =
+      document.getElementById("CameraZInput").value;
+    mainCamera.fov = 43.8;
+    document.getElementById("FOVAmount").value = mainCamera.fov;
+    mainCamera.updateProjectionMatrix();
   }
 }
 
