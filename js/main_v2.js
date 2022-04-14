@@ -522,10 +522,10 @@ function renderPointCloud() {
           vertexColors: true,
         });
         const mesh = new THREE.Points(geometry, material);
+        mesh.geometry.scale(0.9, 0.9, 1.0);
         mesh.geometry.rotateY(3.14159);
         mesh.geometry.rotateZ(4.71239);
-        mesh.geometry.translate(0, 1, 17.6);
-        mesh.geometry.scale(0.7, 0.7, 0.7);
+        mesh.geometry.translate(0.0, 1.0, 7.0);
         scene.add(mesh);
         if (document.getElementById("PCView").checked == true) {
           mesh.visible = true;
