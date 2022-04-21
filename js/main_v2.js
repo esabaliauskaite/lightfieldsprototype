@@ -21,16 +21,16 @@ const singleImageFov = 60; // degrees
 let debugply = "./data/tutorial/blender.ply";
 
 // # Forest Scene ##
-const ForestimgURL = "./data/forest/";
-const ForestposeURL = "./data/forest/poses.json";
+const ForestimgURL = "./data/forestV2/";
+const ForestposeURL = "./data/forestV2/poses.json";
 const ForestsingleImageFov = 35; // degrees
-let forest = "./data/forest/forest.ply";
+let forest = "./data/forestV2/forest.ply";
 
 // # City Scene ##
-const CityURL = "./data/city/";
-const CityPoseURL = "./data/city/city_poses.json";
+const CityURL = "./data/cityV2/";
+const CityPoseURL = "./data/cityV2/city_poses.json";
 const CityingleImageFov = 35; // degrees
-let City = "./data/city/city.ply";
+let City = "./data/cityV2/city.ply";
 
 const bgColor = new THREE.Color(0x0f0f0f);
 const debugbgColor = new THREE.Color(0, 0, 0);
