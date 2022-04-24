@@ -515,123 +515,6 @@ function setCameraZ() {
     document.getElementById("CameraZInput").value;
 }
 
-function renderPointCloud() {
-  if (document.getElementById("FOREST").classList.contains("clicked")) {
-    if (pointCloud) {
-      pointCloud.parent.remove(pointCloud);
-    }
-    plyLoader.load(
-      forest,
-      function (geometry) {
-        document.getElementById("loadedScene").style.display = "block";
-        document.getElementById("loader").style.display = "none";
-        const material = new THREE.PointsMaterial({
-          size: 0.03,
-          vertexColors: true,
-        });
-        const mesh = new THREE.Points(geometry, material);
-        mesh.geometry.scale(0.9, 0.9, 1.0);
-        mesh.geometry.rotateY(3.14159);
-        mesh.geometry.rotateZ(4.71239);
-        mesh.geometry.translate(0.0, 1.0, 7.0);
-        scene.add(mesh);
-        if (document.getElementById("PCView").checked == true) {
-          mesh.visible = true;
-        }
-        if (document.getElementById("PCView").checked == false) {
-          mesh.visible = false;
-        }
-
-        pointCloud = mesh;
-      },
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loadedScene").style.display = "none";
-      },
-      function (error) {
-        console.log("An error happened");
-      }
-    );
-  } else if (
-    document.getElementById("TUTORIAL").classList.contains("clicked")
-  ) {
-    if (pointCloud) {
-      pointCloud.parent.remove(pointCloud);
-    }
-    plyLoader.load(
-      debugply,
-      function (geometry) {
-        document.getElementById("loadedScene").style.display = "block";
-        document.getElementById("loader").style.display = "none";
-        const material = new THREE.PointsMaterial({
-          size: 0.01,
-          vertexColors: true,
-        });
-        const mesh = new THREE.Points(geometry, material);
-        mesh.geometry.scale(0.2, 0.2, 0.2);
-        mesh.geometry.rotateY(3.14159);
-        mesh.geometry.rotateZ(3.14159);
-        mesh.geometry.translate(0.5, 0.02, 0.5);
-        scene.add(mesh);
-        if (document.getElementById("PCView").checked == true) {
-          mesh.visible = true;
-        }
-        if (document.getElementById("PCView").checked == false) {
-          mesh.visible = false;
-        }
-
-        pointCloud = mesh;
-      },
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loadedScene").style.display = "none";
-      },
-      function (error) {
-        console.log("An error happened");
-      }
-    );
-  } else if (document.getElementById("CITY").classList.contains("clicked")) {
-    if (pointCloud) {
-      pointCloud.parent.remove(pointCloud);
-    }
-    plyLoader.load(
-      City,
-      function (geometry) {
-        document.getElementById("loadedScene").style.display = "block";
-        document.getElementById("loader").style.display = "none";
-        const material = new THREE.PointsMaterial({
-          size: 0.01,
-          vertexColors: true,
-        });
-        const mesh = new THREE.Points(geometry, material);
-        mesh.geometry.scale(20.0, 20.0, 1.0);
-        mesh.geometry.rotateY(3.14159);
-        mesh.geometry.rotateZ(3.14159);
-        mesh.geometry.translate(115.0, -25.0, 0.0);
-        scene.add(mesh);
-        if (document.getElementById("PCView").checked == true) {
-          mesh.visible = true;
-        }
-        if (document.getElementById("PCView").checked == false) {
-          mesh.visible = false;
-        }
-
-        pointCloud = mesh;
-      },
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loadedScene").style.display = "none";
-      },
-      function (error) {
-        console.log("An error happened");
-      }
-    );
-  }
-}
-
 function setValues() {
   if (document.querySelector("#TUTORIAL").classList.contains("clicked")) {
     window.location.search = "?scene=Tutorial";
@@ -646,7 +529,6 @@ function setValues() {
 
 function setFullValues() {
   if (currentScene == "Tutorial") {
-    document.getElementById("PCView").checked = false;
     document.getElementById("PinholeView").checked = false;
     dem.position.z = -4;
     document.getElementById("FocusInput").value = dem.position.z;
@@ -665,7 +547,6 @@ function setFullValues() {
     document.getElementById("FOVAmount").value = mainCamera.fov;
     mainCamera.updateProjectionMatrix();
   } else if (currentScene == "Forest") {
-    document.getElementById("PCView").checked = false;
     document.getElementById("PinholeView").checked = false;
 
     dem.position.z = -7;
@@ -686,7 +567,6 @@ function setFullValues() {
     document.getElementById("FOVAmount").value = mainCamera.fov;
     mainCamera.updateProjectionMatrix();
   } else if (currentScene == "City") {
-    document.getElementById("PCView").checked = false;
     document.getElementById("PinholeView").checked = false;
 
     dem.position.z = -45;
@@ -832,7 +712,6 @@ async function eventListeners() {
   document.getElementById("TUTORIAL").addEventListener("click", setValues);
   document.getElementById("CITY").addEventListener("click", setValues);
   window.addEventListener("load", setFullValues);
-  document.getElementById("PCView").addEventListener("click", renderPointCloud);
 }
 
 function URLParameters() {
