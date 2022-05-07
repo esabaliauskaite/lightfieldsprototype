@@ -3,7 +3,7 @@
 
 Light field renderer prototype is built using HTML, CSS, JS, three.js. Renderer allows to explore specific light fields using selected functionalities. This prototype was used in a user study regarding interaction techniques for airborne light fields.
 
-![Picture1](https://user-images.githubusercontent.com/59394960/155564486-726ecc41-f6d1-4af9-8ab8-5585beff97ce.png)
+![11 FinalUI](https://user-images.githubusercontent.com/59394960/167264150-dacd93ab-8559-494d-8658-ce0dc0c723c1.jpg)
 
 LIVE: https://esabaliauskaite.github.io/lightfieldsprototype/
 
